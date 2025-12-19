@@ -4,8 +4,8 @@ import { APIResource } from '../../core/resource';
 import * as AdvisorAPI from './advisor';
 import {
   AIInsight,
-  AIToolCall,
   Advisor,
+  AdvisorListToolsParams,
   AdvisorListToolsResponse,
   AdvisorSendMessageParams,
   AdvisorSendMessageResponse,
@@ -33,9 +33,9 @@ export declare namespace AI {
   export {
     Advisor as Advisor,
     type AIInsight as AIInsight,
-    type AIToolCall as AIToolCall,
     type AdvisorListToolsResponse as AdvisorListToolsResponse,
     type AdvisorSendMessageResponse as AdvisorSendMessageResponse,
+    type AdvisorListToolsParams as AdvisorListToolsParams,
     type AdvisorSendMessageParams as AdvisorSendMessageParams,
   };
 

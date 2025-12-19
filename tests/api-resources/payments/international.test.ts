@@ -11,18 +11,12 @@ describe('resource international', () => {
   // Prism tests are disabled
   test.skip('initiate: only required params', async () => {
     const responsePromise = client.payments.international.initiate({
-      amount: 5000,
-      beneficiary: {
-        address: 'Hauptstrasse 1, 10115 Berlin, Germany',
-        bankName: 'Deutsche Bank',
-        iban: 'DE89370400440532013000',
-        name: 'Maria Schmidt',
-        swiftBic: 'DEUTDEFF',
-      },
-      purpose: 'Vendor payment for Q2 services.',
-      sourceAccountId: 'acc_chase_checking_4567',
-      sourceCurrency: 'USD',
-      targetCurrency: 'EUR',
+      amount: 0,
+      beneficiary: { address: 'address', bankName: 'bankName', name: 'name' },
+      purpose: 'purpose',
+      sourceAccountId: 'sourceAccountId',
+      sourceCurrency: 'SEW',
+      targetCurrency: 'SEW',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -36,20 +30,23 @@ describe('resource international', () => {
   // Prism tests are disabled
   test.skip('initiate: required and optional params', async () => {
     const response = await client.payments.international.initiate({
-      amount: 5000,
+      amount: 0,
       beneficiary: {
-        address: 'Hauptstrasse 1, 10115 Berlin, Germany',
-        bankName: 'Deutsche Bank',
-        iban: 'DE89370400440532013000',
-        name: 'Maria Schmidt',
-        swiftBic: 'DEUTDEFF',
+        address: 'address',
+        bankName: 'bankName',
+        name: 'name',
+        accountNumber: 'accountNumber',
+        iban: 'iban',
+        routingNumber: 'routingNumber',
+        swiftBic: 'swiftBic',
       },
-      purpose: 'Vendor payment for Q2 services.',
-      sourceAccountId: 'acc_chase_checking_4567',
-      sourceCurrency: 'USD',
-      targetCurrency: 'EUR',
+      purpose: 'purpose',
+      sourceAccountId: 'sourceAccountId',
+      sourceCurrency: 'SEW',
+      targetCurrency: 'SEW',
       fxRateLock: true,
-      fxRateProvider: 'best_available',
+      fxRateProvider: 'proprietary_ai',
+      reference: 'reference',
     });
   });
 });

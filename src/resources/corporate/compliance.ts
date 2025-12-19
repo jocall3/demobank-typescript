@@ -6,19 +6,7 @@ import { RequestOptions } from '../../internal/request-options';
 
 export class Compliance extends APIResource {
   /**
-   * Initiates an AI-powered compliance audit for a specific period or scope,
-   * generating a comprehensive report detailing adherence to regulatory frameworks,
-   * internal policies, and flagging potential risks.
-   *
-   * @example
-   * ```ts
-   * const response =
-   *   await client.corporate.compliance.requestAudit({
-   *     auditScope: 'all_transactions',
-   *     endDate: '2024-06-30',
-   *     startDate: '2024-01-01',
-   *   });
-   * ```
+   * Initiates a comprehensive compliance audit for a specified scope and period.
    */
   requestAudit(
     body: ComplianceRequestAuditParams,
@@ -35,32 +23,15 @@ export interface ComplianceRequestAuditResponse {
 }
 
 export interface ComplianceRequestAuditParams {
-  /**
-   * The scope of the compliance audit.
-   */
-  auditScope: 'all_transactions' | 'corporate_cards' | 'international_payments' | 'specific_entity';
+  auditScope: 'all_transactions' | 'specific_accounts' | 'specific_cards' | 'all_users';
 
-  /**
-   * End date for the audit period (inclusive).
-   */
   endDate: string;
 
-  /**
-   * Start date for the audit period (inclusive).
-   */
+  regulatoryFrameworks: Array<'AML' | 'KYC' | 'PCI-DSS' | 'GDPR' | 'CCPA' | 'SOX' | 'OFAC'>;
+
   startDate: string;
 
-  /**
-   * Optional: If `auditScope` is `specific_entity`, the ID of the entity (e.g.,
-   * corporate card ID, counterparty ID).
-   */
-  entityId?: string | null;
-
-  /**
-   * Optional: Specific regulatory frameworks to audit against (e.g., 'GDPR',
-   * 'PCI-DSS', 'AML').
-   */
-  regulatoryFrameworks?: Array<string> | null;
+  additionalContext?: string | null;
 }
 
 export declare namespace Compliance {

@@ -21,6 +21,14 @@ describe('resource advisor', () => {
   });
 
   // Prism tests are disabled
+  test.skip('listTools: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.ai.advisor.listTools({ after: 'after', limit: 1 }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Demobank.NotFoundError);
+  });
+
+  // Prism tests are disabled
   test.skip('sendMessage', async () => {
     const responsePromise = client.ai.advisor.sendMessage({});
     const rawResponse = await responsePromise.asResponse();

@@ -6,172 +6,178 @@ import { RequestOptions } from '../../../../internal/request-options';
 
 export class Rules extends APIResource {
   /**
-   * Creates a new custom AI-powered fraud detection rule, allowing organizations to
-   * define specific criteria, risk scores, and automated responses to evolving
-   * threat landscapes.
-   *
-   * @example
-   * ```ts
-   * const fraudRule =
-   *   await client.corporate.risk.fraud.rules.create({
-   *     actions: [{}],
-   *     description:
-   *       'Flags multiple small transactions (under $50) to different merchants within a very short timeframe (e.g., 5 transactions in 10 minutes), indicative of card testing.',
-   *     name: 'High Velocity Small Transactions',
-   *     severity: 'High',
-   *     triggers: [{}],
-   *   });
-   * ```
+   * Creates a new fraud detection rule.
    */
   create(body: RuleCreateParams, options?: RequestOptions): APIPromise<FraudRule> {
     return this._client.post('/corporate/risk/fraud/rules', { body, ...options });
   }
 
   /**
-   * Retrieves a list of AI-powered fraud detection rules currently active for the
-   * organization, including their parameters, thresholds, and associated actions
-   * (e.g., flag, block, alert).
-   *
-   * @example
-   * ```ts
-   * const fraudRules =
-   *   await client.corporate.risk.fraud.rules.list();
-   * ```
+   * Lists configured fraud detection rules.
    */
-  list(options?: RequestOptions): APIPromise<RuleListResponse> {
-    return this._client.get('/corporate/risk/fraud/rules', options);
+  list(
+    query: RuleListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<RuleListResponse> {
+    return this._client.get('/corporate/risk/fraud/rules', { query, ...options });
   }
 }
 
 /**
- * Definition of an AI-powered fraud detection rule.
+ * Fraud detection rule.
  */
 export interface FraudRule {
-  /**
-   * Unique identifier for the fraud rule.
-   */
-  id?: string;
+  id: string;
 
   /**
-   * Automated actions to take when the rule is triggered.
+   * Action to take on fraud detection.
    */
-  actions?: Array<FraudRule.Action>;
+  action: FraudRule.Action;
 
-  createdAt?: string;
+  createdAt: string;
 
-  createdBy?: string;
+  createdBy: string;
 
   /**
-   * Detailed description of the rule's logic.
+   * Criteria for fraud detection.
    */
-  description?: string;
+  criteria: FraudRule.Criteria;
 
-  lastModifiedAt?: string;
+  description: string;
 
-  /**
-   * Human-readable name for the rule.
-   */
-  name?: string;
+  lastUpdated: string;
 
-  /**
-   * Default severity for anomalies detected by this rule.
-   */
-  severity?: 'Low' | 'Medium' | 'High' | 'Critical';
+  name: string;
 
-  /**
-   * Current status of the rule.
-   */
-  status?: 'active' | 'inactive' | 'draft';
+  severity: 'low' | 'medium' | 'high' | 'critical';
 
-  /**
-   * Conditions that trigger the rule. Supports complex boolean logic.
-   */
-  triggers?: Array<FraudRule.Trigger>;
+  status: 'active' | 'inactive' | 'draft';
 }
 
 export namespace FraudRule {
+  /**
+   * Action to take on fraud detection.
+   */
   export interface Action {
-    details?: string | null;
+    details: string;
 
-    type?: 'flag_for_review' | 'block_transaction' | 'freeze_card' | 'send_alert_email' | 'require_mfa';
+    type: 'block' | 'alert' | 'auto_review' | 'manual_review' | 'request_mfa';
+
+    targetTeam?: string | null;
   }
 
-  export interface Trigger {
-    metric?: 'transaction_amount' | 'account_activity_days' | 'transaction_count_24h' | 'ip_country_mismatch';
+  /**
+   * Criteria for fraud detection.
+   */
+  export interface Criteria {
+    accountInactivityDays?: number | null;
 
-    operator?: 'gt' | 'lt' | 'eq' | 'gte' | 'lte';
+    countryOfOrigin?: Array<string> | null;
 
-    unit?: string | null;
+    geographicDistanceKm?: number | null;
 
-    value?: string;
+    lastLoginDays?: number | null;
+
+    noTravelNotification?: boolean | null;
+
+    paymentCountMin?: number | null;
+
+    recipientCountryRiskLevel?: Array<'low' | 'medium' | 'high' | 'very_high'> | null;
+
+    recipientNew?: boolean | null;
+
+    timeframeHours?: number | null;
+
+    transactionAmountMin?: number | null;
+
+    transactionType?: 'debit' | 'credit' | null;
   }
 }
 
-export type RuleListResponse = Array<FraudRule>;
+export interface RuleListResponse {
+  /**
+   * Indicates if there are more pages available.
+   */
+  hasNextPage: boolean;
+
+  data?: Array<FraudRule>;
+
+  /**
+   * Cursor to use for the next page request.
+   */
+  endCursor?: string | null;
+}
 
 export interface RuleCreateParams {
   /**
-   * Automated actions to take when the rule is triggered.
+   * Action to take on fraud detection.
    */
-  actions: Array<RuleCreateParams.Action>;
+  action: RuleCreateParams.Action;
 
   /**
-   * Detailed description of the rule's logic.
+   * Criteria for fraud detection.
    */
+  criteria: RuleCreateParams.Criteria;
+
   description: string;
 
-  /**
-   * Human-readable name for the new rule.
-   */
   name: string;
 
-  /**
-   * Default severity for anomalies detected by this rule.
-   */
-  severity: 'Low' | 'Medium' | 'High' | 'Critical';
+  severity: 'low' | 'medium' | 'high' | 'critical';
 
-  /**
-   * Conditions that trigger the rule.
-   */
-  triggers: Array<RuleCreateParams.Trigger>;
-
-  /**
-   * Initial status of the rule upon creation.
-   */
-  status?: 'active' | 'inactive' | 'draft';
+  status: 'active' | 'inactive' | 'draft';
 }
 
 export namespace RuleCreateParams {
+  /**
+   * Action to take on fraud detection.
+   */
   export interface Action {
-    details?: string | null;
+    details: string;
 
-    type?: 'flag_for_review' | 'block_transaction' | 'freeze_card' | 'send_alert_email' | 'require_mfa';
+    type: 'block' | 'alert' | 'auto_review' | 'manual_review' | 'request_mfa';
+
+    targetTeam?: string | null;
   }
 
-  export interface Trigger {
-    additionalConditions?: Array<Trigger.AdditionalCondition>;
+  /**
+   * Criteria for fraud detection.
+   */
+  export interface Criteria {
+    accountInactivityDays?: number | null;
 
-    metric?: 'transaction_amount' | 'account_activity_days' | 'transaction_count_24h' | 'ip_country_mismatch';
+    countryOfOrigin?: Array<string> | null;
 
-    operator?: 'gt' | 'lt' | 'eq' | 'gte' | 'lte';
+    geographicDistanceKm?: number | null;
 
-    /**
-     * Time window for aggregation in seconds (e.g., 600 for 10 minutes).
-     */
-    timeWindowSeconds?: number;
+    lastLoginDays?: number | null;
 
-    value?: string;
+    noTravelNotification?: boolean | null;
+
+    paymentCountMin?: number | null;
+
+    recipientCountryRiskLevel?: Array<'low' | 'medium' | 'high' | 'very_high'> | null;
+
+    recipientNew?: boolean | null;
+
+    timeframeHours?: number | null;
+
+    transactionAmountMin?: number | null;
+
+    transactionType?: 'debit' | 'credit' | null;
   }
+}
 
-  export namespace Trigger {
-    export interface AdditionalCondition {
-      metric?: 'transaction_amount';
+export interface RuleListParams {
+  /**
+   * Cursor for the next page of results.
+   */
+  after?: string;
 
-      operator?: 'lt';
-
-      value?: string;
-    }
-  }
+  /**
+   * Maximum number of items to return.
+   */
+  limit?: number;
 }
 
 export declare namespace Rules {
@@ -179,5 +185,6 @@ export declare namespace Rules {
     type FraudRule as FraudRule,
     type RuleListResponse as RuleListResponse,
     type RuleCreateParams as RuleCreateParams,
+    type RuleListParams as RuleListParams,
   };
 }

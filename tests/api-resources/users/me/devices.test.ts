@@ -21,8 +21,16 @@ describe('resource devices', () => {
   });
 
   // Prism tests are disabled
+  test.skip('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.users.me.devices.list({ after: 'after', limit: 1 }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Demobank.NotFoundError);
+  });
+
+  // Prism tests are disabled
   test.skip('deregister', async () => {
-    const responsePromise = client.users.me.devices.deregister('dev_mobile_ios_aabbcc');
+    const responsePromise = client.users.me.devices.deregister('deviceId');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -35,10 +43,9 @@ describe('resource devices', () => {
   // Prism tests are disabled
   test.skip('register: only required params', async () => {
     const responsePromise = client.users.me.devices.register({
-      biometricSignature: 'base64encoded_biometric_proof_string',
       deviceType: 'mobile',
-      model: 'Samsung Galaxy S24 Ultra',
-      os: 'Android 14',
+      model: 'model',
+      os: 'os',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -52,11 +59,12 @@ describe('resource devices', () => {
   // Prism tests are disabled
   test.skip('register: required and optional params', async () => {
     const response = await client.users.me.devices.register({
-      biometricSignature: 'base64encoded_biometric_proof_string',
       deviceType: 'mobile',
-      model: 'Samsung Galaxy S24 Ultra',
-      os: 'Android 14',
-      deviceName: 'My Work Laptop',
+      model: 'model',
+      os: 'os',
+      biometricSignature: 'biometricSignature',
+      deviceName: 'deviceName',
+      pushToken: 'pushToken',
     });
   });
 });

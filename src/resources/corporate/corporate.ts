@@ -11,10 +11,9 @@ import {
 } from './anomalies';
 import * as CardsAPI from './cards';
 import {
-  CardFreezeParams,
   CardIssueVirtualParams,
+  CardListParams,
   CardListResponse,
-  CardUpdateControlsParams,
   Cards,
   CorporateCard,
   CorporateCardControls,
@@ -46,9 +45,8 @@ export declare namespace Corporate {
     type CorporateCard as CorporateCard,
     type CorporateCardControls as CorporateCardControls,
     type CardListResponse as CardListResponse,
-    type CardFreezeParams as CardFreezeParams,
+    type CardListParams as CardListParams,
     type CardIssueVirtualParams as CardIssueVirtualParams,
-    type CardUpdateControlsParams as CardUpdateControlsParams,
   };
 
   export {

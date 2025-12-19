@@ -10,7 +10,7 @@ const client = new Demobank({
 describe('resource applications', () => {
   // Prism tests are disabled
   test.skip('retrieve', async () => {
-    const responsePromise = client.lending.applications.retrieve('loan_app_creditflow-123');
+    const responsePromise = client.lending.applications.retrieve('applicationId');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,9 +23,9 @@ describe('resource applications', () => {
   // Prism tests are disabled
   test.skip('submit: only required params', async () => {
     const responsePromise = client.lending.applications.submit({
-      desiredTermMonths: 60,
-      loanAmount: 25000,
+      loanAmount: 0,
       loanPurpose: 'home_improvement',
+      repaymentTermMonths: 0,
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -39,11 +39,11 @@ describe('resource applications', () => {
   // Prism tests are disabled
   test.skip('submit: required and optional params', async () => {
     const response = await client.lending.applications.submit({
-      desiredTermMonths: 60,
-      loanAmount: 25000,
+      loanAmount: 0,
       loanPurpose: 'home_improvement',
-      additionalNotes: 'Planning a major kitchen renovation that will increase home value.',
-      coApplicantInfo: { email: 'jane.doe@example.com', name: 'Jane Doe', relationship: 'Spouse' },
+      repaymentTermMonths: 0,
+      additionalNotes: 'additionalNotes',
+      coApplicant: { email: 'dev@stainless.com', income: 0, name: 'name' },
     });
   });
 });

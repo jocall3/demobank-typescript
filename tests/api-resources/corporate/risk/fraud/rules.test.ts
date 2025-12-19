@@ -11,12 +11,12 @@ describe('resource rules', () => {
   // Prism tests are disabled
   test.skip('create: only required params', async () => {
     const responsePromise = client.corporate.risk.fraud.rules.create({
-      actions: [{}],
-      description:
-        'Flags multiple small transactions (under $50) to different merchants within a very short timeframe (e.g., 5 transactions in 10 minutes), indicative of card testing.',
-      name: 'High Velocity Small Transactions',
-      severity: 'High',
-      triggers: [{}],
+      action: { details: 'details', type: 'block' },
+      criteria: {},
+      description: 'description',
+      name: 'name',
+      severity: 'low',
+      status: 'active',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -30,20 +30,23 @@ describe('resource rules', () => {
   // Prism tests are disabled
   test.skip('create: required and optional params', async () => {
     const response = await client.corporate.risk.fraud.rules.create({
-      actions: [{ details: 'Flagged for immediate review by fraud analyst.', type: 'flag_for_review' }],
-      description:
-        'Flags multiple small transactions (under $50) to different merchants within a very short timeframe (e.g., 5 transactions in 10 minutes), indicative of card testing.',
-      name: 'High Velocity Small Transactions',
-      severity: 'High',
-      triggers: [
-        {
-          additionalConditions: [{ metric: 'transaction_amount', operator: 'lt', value: '50' }],
-          metric: 'transaction_count_24h',
-          operator: 'gte',
-          timeWindowSeconds: 600,
-          value: '5',
-        },
-      ],
+      action: { details: 'details', type: 'block', targetTeam: 'targetTeam' },
+      criteria: {
+        accountInactivityDays: 0,
+        countryOfOrigin: ['string'],
+        geographicDistanceKm: 0,
+        lastLoginDays: 0,
+        noTravelNotification: true,
+        paymentCountMin: 0,
+        recipientCountryRiskLevel: ['low'],
+        recipientNew: true,
+        timeframeHours: 0,
+        transactionAmountMin: 0,
+        transactionType: 'debit',
+      },
+      description: 'description',
+      name: 'name',
+      severity: 'low',
       status: 'active',
     });
   });
@@ -58,5 +61,16 @@ describe('resource rules', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  // Prism tests are disabled
+  test.skip('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.corporate.risk.fraud.rules.list(
+        { after: 'after', limit: 1 },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Demobank.NotFoundError);
   });
 });

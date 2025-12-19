@@ -7,14 +7,7 @@ import { path } from '../../internal/utils/path';
 
 export class Anomalies extends APIResource {
   /**
-   * Retrieves a comprehensive list of AI-detected financial anomalies across
-   * transactions, payments, and corporate cards that require immediate review and
-   * potential action to mitigate risk and ensure compliance.
-   *
-   * @example
-   * ```ts
-   * const anomalies = await client.corporate.anomalies.list();
-   * ```
+   * Lists detected financial anomalies based on AI risk models.
    */
   list(
     query: AnomalyListParams | null | undefined = {},
@@ -24,18 +17,7 @@ export class Anomalies extends APIResource {
   }
 
   /**
-   * Updates the review status of a specific financial anomaly, allowing compliance
-   * officers to mark it as dismissed, resolved, or escalate for further
-   * investigation after thorough AI-assisted and human review.
-   *
-   * @example
-   * ```ts
-   * const financialAnomaly =
-   *   await client.corporate.anomalies.updateStatus(
-   *     'anom_risk-2024-07-21-D1E2F3',
-   *     { status: 'Resolved' },
-   *   );
-   * ```
+   * Updates the status of a detected anomaly (e.g., dismiss or resolve).
    */
   updateStatus(
     anomalyID: string,
@@ -47,133 +29,90 @@ export class Anomalies extends APIResource {
 }
 
 /**
- * An AI-detected financial anomaly requiring review by compliance or risk teams.
+ * Detected financial anomaly.
  */
 export interface FinancialAnomaly {
-  /**
-   * Unique identifier for the financial anomaly.
-   */
-  id?: string;
+  id: string;
 
-  /**
-   * AI's confidence in the detection of this anomaly.
-   */
-  aiConfidenceScore?: number;
+  aiConfidenceScore: number;
 
-  /**
-   * A concise description of the anomaly.
-   */
-  description?: string;
+  description: string;
 
-  /**
-   * AI-generated detailed explanation of why this event is considered an anomaly,
-   * referencing deviation from normal patterns.
-   */
-  details?: string;
+  entityId: string;
 
-  /**
-   * The unique identifier of the related financial entity (e.g., transaction ID,
-   * card ID).
-   */
-  entityId?: string;
+  entityType: 'payment_order' | 'transaction' | 'counterparty' | 'corporate_card' | 'user' | 'invoice';
 
-  /**
-   * The type of financial entity or event related to the anomaly.
-   */
-  entityType?: 'PaymentOrder' | 'Transaction' | 'Counterparty' | 'CorporateCard' | 'Invoice' | 'Account';
+  recommendedAction: string | null;
 
-  /**
-   * AI-suggested immediate action for mitigation.
-   */
-  recommendedAction?: string | null;
+  riskScore: number;
 
-  /**
-   * List of other transaction IDs potentially related to this anomaly.
-   */
-  relatedTransactions?: Array<string>;
+  severity: 'low' | 'medium' | 'high' | 'critical';
 
-  /**
-   * An AI-generated risk score from 0-100, indicating the probability and potential
-   * impact of a fraudulent or non-compliant event.
-   */
-  riskScore?: number;
+  status: 'new' | 'under_review' | 'escalated' | 'dismissed' | 'resolved';
 
-  /**
-   * AI-assessed severity of the anomaly, indicating potential impact.
-   */
-  severity?: 'Low' | 'Medium' | 'High' | 'Critical';
+  timestamp: string;
 
-  /**
-   * Current review status of the anomaly.
-   */
-  status?: 'New' | 'Under Review' | 'Escalated' | 'Dismissed' | 'Resolved';
+  details?: string | null;
 
-  /**
-   * Timestamp when the anomaly was detected.
-   */
-  timestamp?: string;
+  relatedTransactions?: Array<string> | null;
+
+  resolutionNotes?: string | null;
 }
 
 export interface AnomalyListResponse {
+  /**
+   * Indicates if there are more pages available.
+   */
+  hasNextPage: boolean;
+
   data?: Array<FinancialAnomaly>;
 
-  limit?: number;
-
-  offset?: number;
-
-  total?: number;
+  /**
+   * Cursor to use for the next page request.
+   */
+  endCursor?: string | null;
 }
 
 export interface AnomalyListParams {
   /**
-   * The inclusive end date for filtering data, in `YYYY-MM-DD` format. All items
-   * before or on this date will be included.
+   * Cursor for the next page of results.
+   */
+  after?: string;
+
+  /**
+   * End date for filtering.
    */
   endDate?: string;
 
   /**
-   * Filter anomalies by the type of financial entity they are related to.
+   * Filter by entity type.
    */
-  entityType?: 'PaymentOrder' | 'Transaction' | 'Counterparty' | 'CorporateCard' | 'Invoice';
+  entityType?: 'payment_order' | 'transaction' | 'counterparty' | 'corporate_card' | 'invoice';
 
   /**
-   * The maximum number of items to return per page. Optimized for performance and
-   * typical use cases.
+   * Maximum number of items to return.
    */
   limit?: number;
 
   /**
-   * The starting index of the list for pagination. Use with `limit` for efficient
-   * data retrieval.
+   * Filter by severity.
    */
-  offset?: number;
+  severity?: 'low' | 'medium' | 'high' | 'critical';
 
   /**
-   * Filter anomalies by their AI-assessed severity level.
-   */
-  severity?: 'Low' | 'Medium' | 'High' | 'Critical';
-
-  /**
-   * The inclusive start date for filtering data, in `YYYY-MM-DD` format. All items
-   * after or on this date will be included.
+   * Start date for filtering.
    */
   startDate?: string;
 
   /**
-   * Filter anomalies by their current review status.
+   * Filter by anomaly status.
    */
-  status?: 'New' | 'Under Review' | 'Escalated' | 'Dismissed' | 'Resolved';
+  status?: 'new' | 'under_review' | 'escalated' | 'dismissed' | 'resolved';
 }
 
 export interface AnomalyUpdateStatusParams {
-  /**
-   * The new status for the financial anomaly.
-   */
-  status: 'Dismissed' | 'Resolved' | 'Under Review' | 'Escalated';
+  status: 'dismissed' | 'resolved' | 'under_review' | 'escalated';
 
-  /**
-   * Optional notes regarding the resolution or dismissal of the anomaly.
-   */
   resolutionNotes?: string | null;
 }
 

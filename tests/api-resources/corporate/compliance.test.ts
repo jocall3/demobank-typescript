@@ -12,8 +12,9 @@ describe('resource compliance', () => {
   test.skip('requestAudit: only required params', async () => {
     const responsePromise = client.corporate.compliance.requestAudit({
       auditScope: 'all_transactions',
-      endDate: '2024-06-30',
-      startDate: '2024-01-01',
+      endDate: '2019-12-27',
+      regulatoryFrameworks: ['AML'],
+      startDate: '2019-12-27',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -28,10 +29,10 @@ describe('resource compliance', () => {
   test.skip('requestAudit: required and optional params', async () => {
     const response = await client.corporate.compliance.requestAudit({
       auditScope: 'all_transactions',
-      endDate: '2024-06-30',
-      startDate: '2024-01-01',
-      entityId: 'corp_card_xyz987654',
-      regulatoryFrameworks: ['AML', 'PCI-DSS'],
+      endDate: '2019-12-27',
+      regulatoryFrameworks: ['AML'],
+      startDate: '2019-12-27',
+      additionalContext: 'additionalContext',
     });
   });
 });

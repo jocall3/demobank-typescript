@@ -19,7 +19,6 @@ Types:
 Methods:
 
 - <code title="get /users/me/preferences">client.users.me.preferences.<a href="./src/resources/users/me/preferences.ts">retrieve</a>() -> UserPreferences</code>
-- <code title="put /users/me/preferences">client.users.me.preferences.<a href="./src/resources/users/me/preferences.ts">update</a>({ ...params }) -> UserPreferences</code>
 
 ### Devices
 
@@ -30,7 +29,7 @@ Types:
 
 Methods:
 
-- <code title="get /users/me/devices">client.users.me.devices.<a href="./src/resources/users/me/devices.ts">list</a>() -> DeviceListResponse</code>
+- <code title="get /users/me/devices">client.users.me.devices.<a href="./src/resources/users/me/devices.ts">list</a>({ ...params }) -> DeviceListResponse</code>
 - <code title="delete /users/me/devices/{deviceId}">client.users.me.devices.<a href="./src/resources/users/me/devices.ts">deregister</a>(deviceID) -> void</code>
 - <code title="post /users/me/devices">client.users.me.devices.<a href="./src/resources/users/me/devices.ts">register</a>({ ...params }) -> Device</code>
 
@@ -39,15 +38,11 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/accounts.ts">LinkedAccount</a></code>
-- <code><a href="./src/resources/accounts.ts">AccountListResponse</a></code>
 - <code><a href="./src/resources/accounts.ts">AccountLinkResponse</a></code>
-- <code><a href="./src/resources/accounts.ts">AccountRetrieveDetailsResponse</a></code>
 
 Methods:
 
-- <code title="get /accounts">client.accounts.<a href="./src/resources/accounts.ts">list</a>() -> AccountListResponse</code>
 - <code title="post /accounts/link">client.accounts.<a href="./src/resources/accounts.ts">link</a>({ ...params }) -> AccountLinkResponse</code>
-- <code title="get /accounts/{accountId}/details">client.accounts.<a href="./src/resources/accounts.ts">retrieveDetails</a>(accountID) -> AccountRetrieveDetailsResponse</code>
 
 # Transactions
 
@@ -61,7 +56,6 @@ Methods:
 
 - <code title="get /transactions/{transactionId}">client.transactions.<a href="./src/resources/transactions.ts">retrieve</a>(transactionID) -> Transaction</code>
 - <code title="get /transactions">client.transactions.<a href="./src/resources/transactions.ts">list</a>({ ...params }) -> TransactionListResponse</code>
-- <code title="put /transactions/{transactionId}/categorize">client.transactions.<a href="./src/resources/transactions.ts">categorize</a>(transactionID, { ...params }) -> Transaction</code>
 - <code title="post /transactions/{transactionId}/dispute">client.transactions.<a href="./src/resources/transactions.ts">dispute</a>(transactionID, { ...params }) -> TransactionDisputeResponse</code>
 
 # AI
@@ -71,13 +65,12 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/ai/advisor.ts">AIInsight</a></code>
-- <code><a href="./src/resources/ai/advisor.ts">AIToolCall</a></code>
 - <code><a href="./src/resources/ai/advisor.ts">AdvisorListToolsResponse</a></code>
 - <code><a href="./src/resources/ai/advisor.ts">AdvisorSendMessageResponse</a></code>
 
 Methods:
 
-- <code title="get /ai/advisor/tools">client.ai.advisor.<a href="./src/resources/ai/advisor.ts">listTools</a>() -> AdvisorListToolsResponse</code>
+- <code title="get /ai/advisor/tools">client.ai.advisor.<a href="./src/resources/ai/advisor.ts">listTools</a>({ ...params }) -> AdvisorListToolsResponse</code>
 - <code title="post /ai/advisor/chat">client.ai.advisor.<a href="./src/resources/ai/advisor.ts">sendMessage</a>({ ...params }) -> AdvisorSendMessageResponse</code>
 
 ## Oracle
@@ -101,11 +94,9 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/ai/incubator/pitch.ts">QuantumWeaverState</a></code>
-- <code><a href="./src/resources/ai/incubator/pitch.ts">PitchGetDetailsResponse</a></code>
 
 Methods:
 
-- <code title="get /ai/incubator/pitch/{pitchId}/details">client.ai.incubator.pitch.<a href="./src/resources/ai/incubator/pitch.ts">getDetails</a>(pitchID) -> PitchGetDetailsResponse</code>
 - <code title="post /ai/incubator/pitch">client.ai.incubator.pitch.<a href="./src/resources/ai/incubator/pitch.ts">submit</a>({ ...params }) -> QuantumWeaverState</code>
 
 ## Ads
@@ -143,10 +134,8 @@ Types:
 
 Methods:
 
-- <code title="get /corporate/cards">client.corporate.cards.<a href="./src/resources/corporate/cards.ts">list</a>() -> CardListResponse</code>
-- <code title="post /corporate/cards/{cardId}/freeze">client.corporate.cards.<a href="./src/resources/corporate/cards.ts">freeze</a>(cardID, { ...params }) -> CorporateCard</code>
+- <code title="get /corporate/cards">client.corporate.cards.<a href="./src/resources/corporate/cards.ts">list</a>({ ...params }) -> CardListResponse</code>
 - <code title="post /corporate/cards/virtual">client.corporate.cards.<a href="./src/resources/corporate/cards.ts">issueVirtual</a>({ ...params }) -> CorporateCard</code>
-- <code title="put /corporate/cards/{cardId}/controls">client.corporate.cards.<a href="./src/resources/corporate/cards.ts">updateControls</a>(cardID, { ...params }) -> CorporateCard</code>
 
 ## Anomalies
 
@@ -174,14 +163,6 @@ Methods:
 
 ### CashFlow
 
-Types:
-
-- <code><a href="./src/resources/corporate/treasury/cash-flow.ts">CashFlowGetForecastResponse</a></code>
-
-Methods:
-
-- <code title="get /corporate/treasury/cash-flow/forecast">client.corporate.treasury.cashFlow.<a href="./src/resources/corporate/treasury/cash-flow.ts">getForecast</a>({ ...params }) -> CashFlowGetForecastResponse</code>
-
 ## Risk
 
 ### Fraud
@@ -196,7 +177,7 @@ Types:
 Methods:
 
 - <code title="post /corporate/risk/fraud/rules">client.corporate.risk.fraud.rules.<a href="./src/resources/corporate/risk/fraud/rules.ts">create</a>({ ...params }) -> FraudRule</code>
-- <code title="get /corporate/risk/fraud/rules">client.corporate.risk.fraud.rules.<a href="./src/resources/corporate/risk/fraud/rules.ts">list</a>() -> RuleListResponse</code>
+- <code title="get /corporate/risk/fraud/rules">client.corporate.risk.fraud.rules.<a href="./src/resources/corporate/risk/fraud/rules.ts">list</a>({ ...params }) -> RuleListResponse</code>
 
 # Web3
 
@@ -206,7 +187,7 @@ Types:
 
 Methods:
 
-- <code title="get /web3/nfts">client.web3.<a href="./src/resources/web3/web3.ts">listNFTs</a>() -> Web3ListNFTsResponse</code>
+- <code title="get /web3/nfts">client.web3.<a href="./src/resources/web3/web3.ts">listNFTs</a>({ ...params }) -> Web3ListNFTsResponse</code>
 
 ## Wallets
 
@@ -217,7 +198,7 @@ Types:
 
 Methods:
 
-- <code title="get /web3/wallets">client.web3.wallets.<a href="./src/resources/web3/wallets.ts">list</a>() -> WalletListResponse</code>
+- <code title="get /web3/wallets">client.web3.wallets.<a href="./src/resources/web3/wallets.ts">list</a>({ ...params }) -> WalletListResponse</code>
 - <code title="post /web3/wallets">client.web3.wallets.<a href="./src/resources/web3/wallets.ts">connect</a>({ ...params }) -> CryptoWalletConnection</code>
 
 # Payments
@@ -288,7 +269,7 @@ Methods:
 
 - <code title="post /developers/webhooks">client.developers.webhooks.<a href="./src/resources/developers/webhooks.ts">create</a>({ ...params }) -> WebhookSubscription</code>
 - <code title="put /developers/webhooks/{subscriptionId}">client.developers.webhooks.<a href="./src/resources/developers/webhooks.ts">update</a>(subscriptionID, { ...params }) -> WebhookSubscription</code>
-- <code title="get /developers/webhooks">client.developers.webhooks.<a href="./src/resources/developers/webhooks.ts">list</a>() -> WebhookListResponse</code>
+- <code title="get /developers/webhooks">client.developers.webhooks.<a href="./src/resources/developers/webhooks.ts">list</a>({ ...params }) -> WebhookListResponse</code>
 - <code title="delete /developers/webhooks/{subscriptionId}">client.developers.webhooks.<a href="./src/resources/developers/webhooks.ts">delete</a>(subscriptionID) -> void</code>
 
 # Identity

@@ -18,16 +18,7 @@ export class Ads extends APIResource {
   generate: GenerateAPI.Generate = new GenerateAPI.Generate(this._client);
 
   /**
-   * Polls the real-time status of an asynchronous video generation operation. Once
-   * complete ('done'), the response includes a temporary, signed URL to access and
-   * download the generated video asset.
-   *
-   * @example
-   * ```ts
-   * const response = await client.ai.ads.getGenerationStatus(
-   *   'op-video-gen-12345-abcde',
-   * );
-   * ```
+   * Checks the status of a video generation operation.
    */
   getGenerationStatus(
     operationID: string,
@@ -38,53 +29,21 @@ export class Ads extends APIResource {
 }
 
 /**
- * The real-time status of a video generation job, including progress and final
- * asset URI.
+ * Status of video generation.
  */
 export interface AdGetGenerationStatusResponse {
-  /**
-   * Detailed error message if the generation failed.
-   */
+  message: string;
+
+  operationId: string;
+
+  progressPercentage: number;
+
+  status: 'queued' | 'generating' | 'rendering' | 'done' | 'error';
+
   errorMessage?: string | null;
 
-  /**
-   * A descriptive message about the current stage of the operation.
-   */
-  message?: string;
-
-  /**
-   * The unique identifier for the video generation operation.
-   */
-  operationId?: string;
-
-  /**
-   * A URL to a static image preview of the generated video. Available during or
-   * after generation.
-   */
   previewImageUri?: string | null;
 
-  /**
-   * Estimated percentage completion of the video generation.
-   */
-  progressPercentage?: number | null;
-
-  /**
-   * Current status of the video generation process.
-   */
-  status?:
-    | 'queued'
-    | 'generating'
-    | 'rendering'
-    | 'encoding'
-    | 'post_processing'
-    | 'done'
-    | 'error'
-    | 'cancelled';
-
-  /**
-   * A temporary, signed URL to download the generated video file. Only present when
-   * status is 'done'.
-   */
   videoUri?: string | null;
 }
 

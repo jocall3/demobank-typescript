@@ -11,8 +11,9 @@ describe('resource generate', () => {
   // Prism tests are disabled
   test.skip('create: only required params', async () => {
     const responsePromise = client.ai.ads.generate.create({
-      prompt:
-        "A captivating ad featuring a young entrepreneur using Demo Bank's AI tools to grow their startup. Focus on innovation and ease of use.",
+      lengthSeconds: 0,
+      prompt: 'prompt',
+      style: 'Cinematic',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -26,21 +27,21 @@ describe('resource generate', () => {
   // Prism tests are disabled
   test.skip('create: required and optional params', async () => {
     const response = await client.ai.ads.generate.create({
-      prompt:
-        "A captivating ad featuring a young entrepreneur using Demo Bank's AI tools to grow their startup. Focus on innovation and ease of use.",
-      aspectRatio: '16:9',
-      backgroundMusicGenre: 'none',
-      brandColors: ['#0000FF', '#FFD700'],
-      lengthSeconds: 15,
+      lengthSeconds: 0,
+      prompt: 'prompt',
       style: 'Cinematic',
+      aspectRatio: '16:9',
+      brandColors: ['#Afd'],
+      keywords: ['string'],
     });
   });
 
   // Prism tests are disabled
   test.skip('createAdvanced: only required params', async () => {
     const responsePromise = client.ai.ads.generate.createAdvanced({
-      prompt:
-        "A captivating ad featuring a young entrepreneur using Demo Bank's AI tools to grow their startup. Focus on innovation and ease of use.",
+      lengthSeconds: 0,
+      prompt: 'prompt',
+      style: 'Cinematic',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -54,31 +55,18 @@ describe('resource generate', () => {
   // Prism tests are disabled
   test.skip('createAdvanced: required and optional params', async () => {
     const response = await client.ai.ads.generate.createAdvanced({
-      prompt:
-        "A captivating ad featuring a young entrepreneur using Demo Bank's AI tools to grow their startup. Focus on innovation and ease of use.",
-      aspectRatio: '16:9',
-      audienceTarget: 'entrepreneur',
-      backgroundMusicGenre: 'none',
-      brandAssets: [
-        'https://demobank.com/assets/logo_hd.png',
-        'https://demobank.com/assets/quantum_loop_video.mp4',
-      ],
-      brandColors: ['#0000FF', '#FFD700'],
-      callToAction: {
-        displayTimeSeconds: 5,
-        text: 'Visit DemoBank.com to learn more!',
-        url: 'https://demobank.com',
-      },
-      lengthSeconds: 15,
+      lengthSeconds: 0,
+      prompt: 'prompt',
       style: 'Cinematic',
-      visualElements: [
-        {
-          description: 'A seamless transition to a user interacting with the Demo Bank app interface.',
-          timestampSeconds: 5.2,
-        },
-      ],
+      aspectRatio: '16:9',
+      audienceTarget: 'general',
+      backgroundMusicGenre: 'corporate',
+      brandAssets: ['https://example.com'],
+      brandColors: ['#Afd'],
+      callToAction: { displayTimeSeconds: 0, text: 'text', url: 'https://example.com' },
+      keywords: ['string'],
       voiceoverStyle: 'male_professional',
-      voiceoverText: 'Demo Bank: Your future, amplified by Quantum AI.',
+      voiceoverText: 'voiceoverText',
     });
   });
 });

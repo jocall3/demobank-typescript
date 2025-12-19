@@ -8,38 +8,14 @@ import { path } from '../../internal/utils/path';
 
 export class Webhooks extends APIResource {
   /**
-   * Establishes a new webhook subscription, allowing a developer application to
-   * receive real-time notifications for specified events (e.g., new transaction,
-   * account update) via a provided callback URL.
-   *
-   * @example
-   * ```ts
-   * const webhookSubscription =
-   *   await client.developers.webhooks.create({
-   *     callbackUrl:
-   *       'https://my-app.com/demobank-webhook-listener',
-   *     eventTypes: [
-   *       'account.balance_updated',
-   *       'transaction.new',
-   *     ],
-   *   });
-   * ```
+   * Registers a new webhook subscription.
    */
   create(body: WebhookCreateParams, options?: RequestOptions): APIPromise<WebhookSubscription> {
     return this._client.post('/developers/webhooks', { body, ...options });
   }
 
   /**
-   * Modifies an existing webhook subscription, allowing changes to the callback URL,
-   * subscribed events, or activation status.
-   *
-   * @example
-   * ```ts
-   * const webhookSubscription =
-   *   await client.developers.webhooks.update(
-   *     'whsub_devtool_finance_events',
-   *   );
-   * ```
+   * Updates an existing webhook subscription.
    */
   update(
     subscriptionID: string,
@@ -50,30 +26,17 @@ export class Webhooks extends APIResource {
   }
 
   /**
-   * Retrieves a list of all active webhook subscriptions for the authenticated
-   * developer application, detailing endpoint URLs, subscribed events, and current
-   * status.
-   *
-   * @example
-   * ```ts
-   * const webhookSubscriptions =
-   *   await client.developers.webhooks.list();
-   * ```
+   * Lists registered webhooks.
    */
-  list(options?: RequestOptions): APIPromise<WebhookListResponse> {
-    return this._client.get('/developers/webhooks', options);
+  list(
+    query: WebhookListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<WebhookListResponse> {
+    return this._client.get('/developers/webhooks', { query, ...options });
   }
 
   /**
-   * Deletes an existing webhook subscription, stopping all future event
-   * notifications to the specified callback URL.
-   *
-   * @example
-   * ```ts
-   * await client.developers.webhooks.delete(
-   *   'whsub_devtool_finance_events',
-   * );
-   * ```
+   * Deletes a webhook subscription.
    */
   delete(subscriptionID: string, options?: RequestOptions): APIPromise<void> {
     return this._client.delete(path`/developers/webhooks/${subscriptionID}`, {
@@ -84,83 +47,66 @@ export class Webhooks extends APIResource {
 }
 
 /**
- * Details of an active webhook subscription.
+ * Webhook subscription details.
  */
 export interface WebhookSubscription {
-  /**
-   * Unique identifier for the webhook subscription.
-   */
-  id?: string;
+  id: string;
 
-  /**
-   * The URL where event notifications will be sent.
-   */
-  callbackUrl?: string;
-
-  createdAt?: string;
-
-  /**
-   * A list of event types for which notifications will be sent.
-   */
-  eventTypes?: Array<string>;
-
-  /**
-   * Timestamp of the last attempted event delivery.
-   */
-  lastDeliveryAttempt?: string | null;
-
-  /**
-   * Indicates if the last delivery attempt was successful.
-   */
-  lastDeliverySuccess?: boolean | null;
-
-  /**
-   * A secret key used to sign webhook payloads, ensuring authenticity and integrity.
-   * Only shown upon creation.
-   */
-  secret?: string;
-
-  /**
-   * Current status of the subscription.
-   */
-  status?: 'active' | 'paused' | 'disabled' | 'error';
-}
-
-export type WebhookListResponse = Array<WebhookSubscription>;
-
-export interface WebhookCreateParams {
-  /**
-   * The URL where event notifications will be sent. Must be HTTPS.
-   */
   callbackUrl: string;
 
+  createdAt: string;
+
+  events: Array<string>;
+
+  status: 'active' | 'paused' | 'suspended';
+
+  failureCount?: number;
+
+  lastTriggered?: string | null;
+
+  secret?: string | null;
+}
+
+export interface WebhookListResponse {
   /**
-   * A list of event types to subscribe to. Available types can be found in API
-   * documentation.
+   * Indicates if there are more pages available.
    */
-  eventTypes: Array<string>;
+  hasNextPage: boolean;
+
+  data?: Array<WebhookSubscription>;
 
   /**
-   * An optional description for the webhook subscription.
+   * Cursor to use for the next page request.
    */
-  description?: string | null;
+  endCursor?: string | null;
+}
+
+export interface WebhookCreateParams {
+  callbackUrl: string;
+
+  events: Array<string>;
+
+  secret?: string | null;
 }
 
 export interface WebhookUpdateParams {
+  callbackUrl?: string;
+
+  events?: Array<string>;
+
+  status?: 'active' | 'paused' | 'suspended';
+}
+
+export interface WebhookListParams {
   /**
-   * The new URL for event notifications.
+   * Cursor for the next page of results.
    */
-  callbackUrl?: string | null;
+  after?: string;
 
   /**
-   * The updated list of event types to subscribe to.
+   * Maximum number of items to return.
    */
-  eventTypes?: Array<string> | null;
-
-  /**
-   * The new status for the subscription.
-   */
-  status?: 'active' | 'paused' | 'disabled' | null;
+  limit?: number;
 }
 
 export declare namespace Webhooks {
@@ -169,5 +115,6 @@ export declare namespace Webhooks {
     type WebhookListResponse as WebhookListResponse,
     type WebhookCreateParams as WebhookCreateParams,
     type WebhookUpdateParams as WebhookUpdateParams,
+    type WebhookListParams as WebhookListParams,
   };
 }

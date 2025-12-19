@@ -7,30 +7,16 @@ import { path } from '../internal/utils/path';
 
 export class Transactions extends APIResource {
   /**
-   * Retrieves granular information for a single transaction by its unique ID,
-   * including AI categorization confidence, merchant details, and associated carbon
-   * footprint.
-   *
-   * @example
-   * ```ts
-   * const transaction = await client.transactions.retrieve(
-   *   'txn_quantum-2024-07-21-A7B8C9',
-   * );
-   * ```
+   * Retrieves detailed information about a specific transaction, including merchant
+   * details and location.
    */
   retrieve(transactionID: string, options?: RequestOptions): APIPromise<Transaction> {
     return this._client.get(path`/transactions/${transactionID}`, options);
   }
 
   /**
-   * Retrieves a paginated list of the user's transactions, with extensive options
-   * for filtering by type, category, date range, amount, and intelligent AI-driven
-   * sorting and search capabilities.
-   *
-   * @example
-   * ```ts
-   * const transactions = await client.transactions.list();
-   * ```
+   * Retrieves a paginated list of transactions across all accounts, with extensive
+   * filtering options for analysis.
    */
   list(
     query: TransactionListParams | null | undefined = {},
@@ -40,36 +26,7 @@ export class Transactions extends APIResource {
   }
 
   /**
-   * Allows the user to override or refine the AI's categorization for a transaction,
-   * improving future AI accuracy and personal financial reporting.
-   *
-   * @example
-   * ```ts
-   * const transaction = await client.transactions.categorize(
-   *   'txn_quantum-2024-07-21-A7B8C9',
-   *   { category: 'Business Expenses > Client Entertainment' },
-   * );
-   * ```
-   */
-  categorize(
-    transactionID: string,
-    body: TransactionCategorizeParams,
-    options?: RequestOptions,
-  ): APIPromise<Transaction> {
-    return this._client.put(path`/transactions/${transactionID}/categorize`, { body, ...options });
-  }
-
-  /**
-   * Begins the process of disputing a specific transaction, providing details and
-   * supporting documentation for review by our compliance team and AI.
-   *
-   * @example
-   * ```ts
-   * const response = await client.transactions.dispute(
-   *   'txn_quantum-2024-07-21-A7B8C9',
-   *   { reason: 'unauthorized' },
-   * );
-   * ```
+   * Starts a dispute process for a specific transaction.
    */
   dispute(
     transactionID: string,
@@ -81,126 +38,98 @@ export class Transactions extends APIResource {
 }
 
 /**
- * A detailed financial transaction entry with AI-enriched data.
+ * Represents a financial transaction.
  */
 export interface Transaction {
-  /**
-   * Unique identifier for the transaction.
-   */
-  id?: string;
+  id: string;
 
-  /**
-   * ID of the account this transaction belongs to.
-   */
-  accountId?: string;
+  accountId: string;
 
-  /**
-   * AI's confidence score (0-1) in the assigned category.
-   */
-  aiCategoryConfidence?: number;
+  amount: number;
 
-  /**
-   * The transaction amount.
-   */
-  amount?: number;
+  category: string;
 
-  /**
-   * Estimated carbon footprint (in kg CO2e) associated with this transaction,
-   * calculated by AI.
-   */
+  currency: string;
+
+  date: string;
+
+  description: string;
+
+  type: 'income' | 'expense' | 'transfer' | 'investment' | 'refund' | 'bill_payment';
+
+  aiCategoryConfidence?: number | null;
+
   carbonFootprint?: number | null;
 
-  /**
-   * AI-assigned or user-defined category for the transaction.
-   */
-  category?: string;
-
-  /**
-   * The currency of the transaction.
-   */
-  currency?: string;
-
-  /**
-   * The date the transaction occurred.
-   */
-  date?: string;
-
-  /**
-   * Raw description from the bank statement or merchant.
-   */
-  description?: string;
-
-  /**
-   * Current status of any dispute related to this transaction.
-   */
   disputeStatus?: 'none' | 'pending' | 'under_review' | 'resolved' | 'rejected';
 
   /**
-   * Geographic location data for the transaction, if available.
+   * Geographic location of a transaction.
    */
-  location?: Transaction.Location | null;
+  location?: Transaction.Location;
 
   /**
-   * Detailed information about the merchant.
+   * Details about a merchant.
    */
-  merchantDetails?: Transaction.MerchantDetails | null;
+  merchantDetails?: Transaction.MerchantDetails;
 
-  /**
-   * How the payment was made (e.g., online, in-store).
-   */
-  paymentChannel?: 'online' | 'in_store' | 'atm' | 'recurring_bill' | 'p2p';
+  notes?: string | null;
 
-  /**
-   * The date the transaction was officially posted.
-   */
+  paymentChannel?: 'in_store' | 'online' | 'mobile' | 'atm' | 'bill_payment' | 'transfer' | 'other' | null;
+
   postedDate?: string | null;
 
-  /**
-   * URL to a digital receipt, if captured or uploaded.
-   */
   receiptUrl?: string | null;
 
-  /**
-   * User-defined tags for deeper organization.
-   */
-  tags?: Array<string>;
-
-  /**
-   * The type of transaction (e.g., income, expense).
-   */
-  type?: 'income' | 'expense' | 'transfer' | 'investment' | 'refund' | 'bill_payment' | 'fee';
+  tags?: Array<string> | null;
 }
 
 export namespace Transaction {
   /**
-   * Geographic location data for the transaction, if available.
+   * Geographic location of a transaction.
    */
   export interface Location {
-    city?: string;
+    city?: string | null;
 
     latitude?: number;
 
     longitude?: number;
+
+    state?: string | null;
+
+    zip?: string | null;
   }
 
   /**
-   * Detailed information about the merchant.
+   * Details about a merchant.
    */
   export interface MerchantDetails {
+    /**
+     * Physical address structure.
+     */
     address?: MerchantDetails.Address;
 
-    logoUrl?: string;
+    logoUrl?: string | null;
 
     name?: string;
 
-    website?: string;
+    phone?: string | null;
+
+    website?: string | null;
   }
 
   export namespace MerchantDetails {
+    /**
+     * Physical address structure.
+     */
     export interface Address {
       city?: string;
 
+      country?: string;
+
       state?: string;
+
+      street?: string;
 
       zip?: string;
     }
@@ -208,137 +137,87 @@ export namespace Transaction {
 }
 
 /**
- * A paginated list structure for transactions.
+ * Paginated list of transactions.
  */
 export interface TransactionListResponse {
+  /**
+   * Indicates if there are more pages available.
+   */
+  hasNextPage: boolean;
+
   data?: Array<Transaction>;
 
-  limit?: number;
-
   /**
-   * The offset to use for the next page of results, if available.
+   * Cursor to use for the next page request.
    */
-  nextOffset?: number | null;
-
-  offset?: number;
-
-  /**
-   * The offset for the previous page of results, if available.
-   */
-  prevOffset?: number | null;
-
-  total?: number;
+  endCursor?: string | null;
 }
 
 /**
- * Current status of a transaction dispute.
+ * Status of a dispute.
  */
 export interface TransactionDisputeResponse {
-  /**
-   * Unique identifier for the dispute case.
-   */
   disputeId: string;
 
-  /**
-   * Current status of the dispute.
-   */
-  status:
-    | 'pending'
-    | 'under_review'
-    | 'documentation_requested'
-    | 'resolved_favorable'
-    | 'resolved_unfavorable'
-    | 'closed';
+  lastUpdated: string;
 
-  lastUpdated?: string;
+  nextSteps: string;
 
-  /**
-   * Recommended next steps or expected timeline.
-   */
-  nextSteps?: string;
+  status: 'pending' | 'under_review' | 'requires_more_info' | 'resolved' | 'rejected';
 }
 
 export interface TransactionListParams {
   /**
-   * Filter transactions by their AI-assigned or user-defined category.
+   * Cursor for the next page of results.
+   */
+  after?: string;
+
+  /**
+   * Filter by transaction category.
    */
   category?: string;
 
   /**
-   * Retrieve transactions up to this date (inclusive).
+   * Filter transactions before this date.
    */
   endDate?: string;
 
   /**
-   * The maximum number of items to return per page. Optimized for performance and
-   * typical use cases.
+   * Maximum number of items to return.
    */
   limit?: number;
 
   /**
-   * Filter for transactions with an amount less than or equal to this value.
+   * Maximum transaction amount.
    */
   maxAmount?: number;
 
   /**
-   * Filter for transactions with an amount greater than or equal to this value.
+   * Minimum transaction amount.
    */
   minAmount?: number;
 
   /**
-   * The starting index of the list for pagination. Use with `limit` for efficient
-   * data retrieval.
-   */
-  offset?: number;
-
-  /**
-   * Free-text search across transaction descriptions, merchants, and notes.
+   * Text search on description or merchant name.
    */
   searchQuery?: string;
 
   /**
-   * Retrieve transactions from this date (inclusive).
+   * Filter transactions after this date.
    */
   startDate?: string;
 
   /**
-   * Filter transactions by type (e.g., income, expense, transfer).
+   * Filter by transaction type.
    */
   type?: 'income' | 'expense' | 'transfer' | 'investment' | 'refund' | 'bill_payment';
 }
 
-export interface TransactionCategorizeParams {
-  /**
-   * The new category for the transaction. Can be a hierarchical path.
-   */
-  category: string;
-
-  /**
-   * If true, Quantum AI will learn from this correction for future similar
-   * transactions.
-   */
-  applyToFuture?: boolean;
-
-  /**
-   * Optional user notes for the transaction.
-   */
-  notes?: string | null;
-}
-
 export interface TransactionDisputeParams {
-  /**
-   * The primary reason for disputing the transaction.
-   */
-  reason: 'unauthorized' | 'duplicate' | 'wrong_amount' | 'not_received_goods' | 'other';
+  details: string;
 
-  /**
-   * Detailed explanation of the dispute.
-   */
-  details?: string | null;
+  reason: 'unauthorized' | 'duplicate_charge' | 'incorrect_amount' | 'product_service_issue' | 'other';
 
-  /**
-   * URLs to supporting documents (e.g., screenshots, communication logs).
-   */
   supportingDocuments?: Array<string> | null;
 }
 
@@ -348,7 +227,6 @@ export declare namespace Transactions {
     type TransactionListResponse as TransactionListResponse,
     type TransactionDisputeResponse as TransactionDisputeResponse,
     type TransactionListParams as TransactionListParams,
-    type TransactionCategorizeParams as TransactionCategorizeParams,
     type TransactionDisputeParams as TransactionDisputeParams,
   };
 }
