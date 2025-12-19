@@ -7,35 +7,14 @@ import { path } from '../../internal/utils/path';
 
 export class Applications extends APIResource {
   /**
-   * Retrieves the current status and detailed information for a submitted loan
-   * application, including AI underwriting outcomes, approved terms, and next steps.
-   *
-   * @example
-   * ```ts
-   * const loanApplicationStatus =
-   *   await client.lending.applications.retrieve(
-   *     'loan_app_creditflow-123',
-   *   );
-   * ```
+   * Retrieves the status of a loan application.
    */
   retrieve(applicationID: string, options?: RequestOptions): APIPromise<LoanApplicationStatus> {
     return this._client.get(path`/lending/applications/${applicationID}`, options);
   }
 
   /**
-   * Submits a new loan application, which is instantly processed and underwritten by
-   * our Quantum AI, providing rapid decisions and personalized loan offers based on
-   * real-time financial health data.
-   *
-   * @example
-   * ```ts
-   * const loanApplicationStatus =
-   *   await client.lending.applications.submit({
-   *     desiredTermMonths: 60,
-   *     loanAmount: 25000,
-   *     loanPurpose: 'home_improvement',
-   *   });
-   * ```
+   * Submits a loan application for AI underwriting.
    */
   submit(body: ApplicationSubmitParams, options?: RequestOptions): APIPromise<LoanApplicationStatus> {
     return this._client.post('/lending/applications', { body, ...options });
@@ -43,102 +22,116 @@ export class Applications extends APIResource {
 }
 
 /**
- * Status and details of a loan application, including AI underwriting results.
+ * Status of loan application.
  */
 export interface LoanApplicationStatus {
-  /**
-   * Unique identifier for the loan application.
-   */
-  applicationId?: string;
+  applicationDate: string;
+
+  applicationId: string;
+
+  loanAmountRequested: number;
+
+  loanPurpose:
+    | 'home_improvement'
+    | 'debt_consolidation'
+    | 'medical_expense'
+    | 'education'
+    | 'auto_purchase'
+    | 'other';
+
+  nextSteps: string;
+
+  status:
+    | 'submitted'
+    | 'underwriting'
+    | 'approved'
+    | 'declined'
+    | 'pending_acceptance'
+    | 'funded'
+    | 'cancelled';
 
   /**
-   * AI-generated message explaining the application decision.
+   * AI underwriting decision.
    */
-  decisionMessage?: string;
+  aiUnderwritingResult?: LoanApplicationStatus.AIUnderwritingResult;
 
   /**
-   * Timestamp when the AI decision was made.
+   * Loan offer details.
    */
-  decisionTimestamp?: string;
+  offerDetails?: LoanApplicationStatus.OfferDetails;
+}
+
+export namespace LoanApplicationStatus {
+  /**
+   * AI underwriting decision.
+   */
+  export interface AIUnderwritingResult {
+    aiConfidence: number;
+
+    decision: 'approved' | 'declined' | 'referred_to_human';
+
+    reason: string;
+
+    maxApprovedAmount?: number | null;
+
+    recommendedInterestRate?: number | null;
+  }
 
   /**
-   * If declined, the AI-identified primary reason for the decision.
+   * Loan offer details.
    */
-  declineReason?: string | null;
+  export interface OfferDetails {
+    amount: number;
 
-  /**
-   * Annual Percentage Rate (APR) offered, if approved.
-   */
-  interestRate?: number | null;
+    expirationDate: string;
 
-  /**
-   * The final approved loan amount, if approved.
-   */
-  loanAmountApproved?: number | null;
+    interestRate: number;
 
-  /**
-   * Estimated monthly repayment amount.
-   */
-  monthlyPayment?: number | null;
+    isPreApproved: boolean;
 
-  /**
-   * If approved, the expiration date for accepting the loan offer.
-   */
-  offerExpiration?: string | null;
+    offerId: string;
 
-  /**
-   * URL to the detailed repayment schedule if the loan is approved and accepted.
-   */
-  repaymentScheduleUrl?: string | null;
+    offerType: 'personal_loan' | 'auto_loan' | 'mortgage' | 'credit_line' | 'microloan';
 
-  /**
-   * Current status of the loan application.
-   */
-  status?: 'pending_review' | 'approved' | 'declined' | 'withdrawn' | 'funding_in_progress' | 'funded';
+    aiPersonalizationScore?: number | null;
 
-  /**
-   * Approved repayment term in months.
-   */
-  termMonths?: number | null;
+    monthlyPayment?: number | null;
+
+    originationFee?: number | null;
+
+    repaymentTermMonths?: number | null;
+
+    termsAndConditionsUrl?: string | null;
+
+    totalRepayable?: number | null;
+  }
 }
 
 export interface ApplicationSubmitParams {
-  /**
-   * Desired repayment term in months.
-   */
-  desiredTermMonths: number;
-
-  /**
-   * The desired loan amount in USD.
-   */
   loanAmount: number;
 
-  /**
-   * The primary purpose for the loan.
-   */
-  loanPurpose: 'personal_loan' | 'business_startup' | 'debt_consolidation' | 'home_improvement' | 'education';
+  loanPurpose:
+    | 'home_improvement'
+    | 'debt_consolidation'
+    | 'medical_expense'
+    | 'education'
+    | 'auto_purchase'
+    | 'other';
 
-  /**
-   * Any additional information for the AI underwriter.
-   */
+  repaymentTermMonths: number;
+
   additionalNotes?: string | null;
 
-  /**
-   * Optional details for a co-applicant.
-   */
-  coApplicantInfo?: ApplicationSubmitParams.CoApplicantInfo | null;
+  coApplicant?: ApplicationSubmitParams.CoApplicant | null;
 }
 
 export namespace ApplicationSubmitParams {
-  /**
-   * Optional details for a co-applicant.
-   */
-  export interface CoApplicantInfo {
+  export interface CoApplicant {
     email?: string;
 
-    name?: string;
+    income?: number;
 
-    relationship?: string;
+    name?: string;
   }
 }
 

@@ -10,7 +10,7 @@ const client = new Demobank({
 describe('resource ads', () => {
   // Prism tests are disabled
   test.skip('getGenerationStatus', async () => {
-    const responsePromise = client.ai.ads.getGenerationStatus('op-video-gen-12345-abcde');
+    const responsePromise = client.ai.ads.getGenerationStatus('operationId');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

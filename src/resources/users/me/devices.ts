@@ -8,30 +8,18 @@ import { path } from '../../../internal/utils/path';
 
 export class Devices extends APIResource {
   /**
-   * Retrieves a list of all devices linked to the user's account, including mobile
-   * phones, tablets, and desktops, indicating their last active status and security
-   * posture.
-   *
-   * @example
-   * ```ts
-   * const devices = await client.users.me.devices.list();
-   * ```
+   * Returns a paginated list of devices currently authorized to access the user's
+   * account.
    */
-  list(options?: RequestOptions): APIPromise<DeviceListResponse> {
-    return this._client.get('/users/me/devices', options);
+  list(
+    query: DeviceListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<DeviceListResponse> {
+    return this._client.get('/users/me/devices', { query, ...options });
   }
 
   /**
-   * Removes a specific device from the user's linked devices, revoking its access
-   * and requiring re-registration for future use. Useful for lost or compromised
-   * devices.
-   *
-   * @example
-   * ```ts
-   * await client.users.me.devices.deregister(
-   *   'dev_mobile_ios_aabbcc',
-   * );
-   * ```
+   * Removes a device from the user's account, revoking its access tokens.
    */
   deregister(deviceID: string, options?: RequestOptions): APIPromise<void> {
     return this._client.delete(path`/users/me/devices/${deviceID}`, {
@@ -41,20 +29,8 @@ export class Devices extends APIResource {
   }
 
   /**
-   * Registers a new device for secure access and multi-factor authentication,
-   * associating it with the user's profile. This typically initiates a biometric or
-   * MFA enrollment flow.
-   *
-   * @example
-   * ```ts
-   * const device = await client.users.me.devices.register({
-   *   biometricSignature:
-   *     'base64encoded_biometric_proof_string',
-   *   deviceType: 'mobile',
-   *   model: 'Samsung Galaxy S24 Ultra',
-   *   os: 'Android 14',
-   * });
-   * ```
+   * Registers a new device for the user, enabling push notifications and trusted
+   * access.
    */
   register(body: DeviceRegisterParams, options?: RequestOptions): APIPromise<Device> {
     return this._client.post('/users/me/devices', { body, ...options });
@@ -62,76 +38,73 @@ export class Devices extends APIResource {
 }
 
 /**
- * Details of a device registered to the user's account for access and security.
+ * Represents a connected device.
  */
 export interface Device {
-  /**
-   * Unique identifier for the registered device.
-   */
-  id?: string;
+  id: string;
 
-  /**
-   * Last known IP address associated with the device.
-   */
-  ipAddress?: string;
+  ipAddress: string;
 
-  /**
-   * Timestamp of the last recorded activity from this device.
-   */
-  lastActive?: string;
-
-  /**
-   * Device model.
-   */
-  model?: string;
-
-  /**
-   * Operating system and version of the device.
-   */
-  os?: string;
-
-  /**
-   * Push notification token for the device, if registered.
-   */
-  pushToken?: string | null;
-
-  /**
-   * Security trust level of the device. Untrusted devices may require additional
-   * MFA.
-   */
-  trustLevel?: 'trusted' | 'untrusted' | 'pending_verification';
-
-  /**
-   * Type of device.
-   */
-  type?: 'mobile' | 'tablet' | 'desktop' | 'wearable';
-}
-
-export type DeviceListResponse = Array<Device>;
-
-export interface DeviceRegisterParams {
-  /**
-   * A cryptographic signature derived from a local biometric scan (e.g., face or
-   * fingerprint) on the new device, used for initial trust establishment.
-   */
-  biometricSignature: string;
-
-  deviceType: 'mobile' | 'tablet' | 'desktop' | 'wearable';
+  lastActive: string;
 
   model: string;
 
   os: string;
 
-  /**
-   * Optional, user-friendly name for the device.
-   */
+  trustLevel: 'trusted' | 'pending_verification' | 'untrusted' | 'blocked';
+
+  type: 'mobile' | 'desktop' | 'tablet' | 'smart_watch';
+
   deviceName?: string | null;
+
+  pushToken?: string | null;
+}
+
+export interface DeviceListResponse {
+  /**
+   * Indicates if there are more pages available.
+   */
+  hasNextPage: boolean;
+
+  data?: Array<Device>;
+
+  /**
+   * Cursor to use for the next page request.
+   */
+  endCursor?: string | null;
+}
+
+export interface DeviceListParams {
+  /**
+   * Cursor for the next page of results.
+   */
+  after?: string;
+
+  /**
+   * Maximum number of items to return.
+   */
+  limit?: number;
+}
+
+export interface DeviceRegisterParams {
+  deviceType: 'mobile' | 'desktop' | 'tablet' | 'smart_watch';
+
+  model: string;
+
+  os: string;
+
+  biometricSignature?: string | null;
+
+  deviceName?: string | null;
+
+  pushToken?: string | null;
 }
 
 export declare namespace Devices {
   export {
     type Device as Device,
     type DeviceListResponse as DeviceListResponse,
+    type DeviceListParams as DeviceListParams,
     type DeviceRegisterParams as DeviceRegisterParams,
   };
 }

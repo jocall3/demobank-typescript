@@ -7,4 +7,5 @@ export {
   type WebhookListResponse,
   type WebhookCreateParams,
   type WebhookUpdateParams,
+  type WebhookListParams,
 } from './webhooks';

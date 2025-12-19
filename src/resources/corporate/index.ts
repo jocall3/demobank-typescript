@@ -12,9 +12,8 @@ export {
   type CorporateCard,
   type CorporateCardControls,
   type CardListResponse,
-  type CardFreezeParams,
+  type CardListParams,
   type CardIssueVirtualParams,
-  type CardUpdateControlsParams,
 } from './cards';
 export {
   Compliance,

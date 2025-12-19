@@ -11,9 +11,11 @@ describe('resource kyc', () => {
   // Prism tests are disabled
   test.skip('submit: only required params', async () => {
     const responsePromise = client.identity.kyc.submit({
-      consentGiven: true,
-      documentReference: 'https://demobank-uploads.com/kyc/user_passport_scan.pdf',
-      documentType: 'passport',
+      countryOfIssue: 'SE',
+      documentNumber: 'documentNumber',
+      documentType: 'drivers_license',
+      expirationDate: '2019-12-27',
+      issueDate: '2019-12-27',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -27,14 +29,14 @@ describe('resource kyc', () => {
   // Prism tests are disabled
   test.skip('submit: required and optional params', async () => {
     const response = await client.identity.kyc.submit({
-      consentGiven: true,
-      documentReference: 'https://demobank-uploads.com/kyc/user_passport_scan.pdf',
-      documentType: 'passport',
-      addressProofReference: 'https://demobank-uploads.com/kyc/user_utility_bill.pdf',
-      addressProofType: 'utility_bill',
-      documentNumber: 'P12345678',
-      expirationDate: '2030-03-09',
-      issueDate: '2020-03-10',
+      countryOfIssue: 'SE',
+      documentNumber: 'documentNumber',
+      documentType: 'drivers_license',
+      expirationDate: '2019-12-27',
+      issueDate: '2019-12-27',
+      additionalDocuments: ['U3RhaW5sZXNzIHJvY2tz'],
+      documentBackImage: 'U3RhaW5sZXNzIHJvY2tz',
+      documentFrontImage: 'U3RhaW5sZXNzIHJvY2tz',
     });
   });
 });

@@ -16,17 +16,9 @@ import * as Errors from './core/error';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
-import {
-  AccountLinkParams,
-  AccountLinkResponse,
-  AccountListResponse,
-  AccountRetrieveDetailsResponse,
-  Accounts,
-  LinkedAccount,
-} from './resources/accounts';
+import { AccountLinkParams, AccountLinkResponse, Accounts, LinkedAccount } from './resources/accounts';
 import {
   Transaction,
-  TransactionCategorizeParams,
   TransactionDisputeParams,
   TransactionDisputeResponse,
   TransactionListParams,
@@ -44,7 +36,7 @@ import {
   SustainabilityRetrieveCarbonFootprintResponse,
 } from './resources/sustainability/sustainability';
 import { Users } from './resources/users/users';
-import { Web3, Web3ListNFTsResponse } from './resources/web3/web3';
+import { Web3, Web3ListNFTsParams, Web3ListNFTsResponse } from './resources/web3/web3';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -243,34 +235,16 @@ export class Demobank {
       return;
     }
 
-    if (this.bearerToken && values.get('authorization')) {
-      return;
-    }
-    if (nulls.has('authorization')) {
-      return;
-    }
-
     throw new Error(
-      'Could not resolve authentication method. Expected either apiKey or bearerToken to be set. Or for one of the "X-API-KEY" or "Authorization" headers to be explicitly omitted',
+      'Could not resolve authentication method. Expected the apiKey to be set. Or for the "X-API-Key" headers to be explicitly omitted',
     );
   }
 
   protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    return buildHeaders([await this.apiKeyAuth(opts), await this.biometricAuth(opts)]);
-  }
-
-  protected async apiKeyAuth(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
     if (this.apiKey == null) {
       return undefined;
     }
-    return buildHeaders([{ 'X-API-KEY': this.apiKey }]);
-  }
-
-  protected async biometricAuth(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    if (this.bearerToken == null) {
-      return undefined;
-    }
-    return buildHeaders([{ Authorization: `Bearer ${this.bearerToken}` }]);
+    return buildHeaders([{ 'X-API-Key': this.apiKey }]);
   }
 
   /**
@@ -810,9 +784,7 @@ export declare namespace Demobank {
   export {
     Accounts as Accounts,
     type LinkedAccount as LinkedAccount,
-    type AccountListResponse as AccountListResponse,
     type AccountLinkResponse as AccountLinkResponse,
-    type AccountRetrieveDetailsResponse as AccountRetrieveDetailsResponse,
     type AccountLinkParams as AccountLinkParams,
   };
 
@@ -822,7 +794,6 @@ export declare namespace Demobank {
     type TransactionListResponse as TransactionListResponse,
     type TransactionDisputeResponse as TransactionDisputeResponse,
     type TransactionListParams as TransactionListParams,
-    type TransactionCategorizeParams as TransactionCategorizeParams,
     type TransactionDisputeParams as TransactionDisputeParams,
   };
 
@@ -830,7 +801,11 @@ export declare namespace Demobank {
 
   export { Corporate as Corporate };
 
-  export { Web3 as Web3, type Web3ListNFTsResponse as Web3ListNFTsResponse };
+  export {
+    Web3 as Web3,
+    type Web3ListNFTsResponse as Web3ListNFTsResponse,
+    type Web3ListNFTsParams as Web3ListNFTsParams,
+  };
 
   export { Payments as Payments };
 

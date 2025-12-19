@@ -3,277 +3,122 @@
 import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
-import { path } from '../../internal/utils/path';
 
 export class Cards extends APIResource {
   /**
-   * Retrieves a comprehensive list of all physical and virtual corporate cards
-   * associated with the user's organization, including their status, assigned
-   * holder, and current spending controls.
-   *
-   * @example
-   * ```ts
-   * const corporateCards = await client.corporate.cards.list();
-   * ```
+   * Retrieves a list of all corporate cards issued to the organization.
    */
-  list(options?: RequestOptions): APIPromise<CardListResponse> {
-    return this._client.get('/corporate/cards', options);
+  list(
+    query: CardListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<CardListResponse> {
+    return this._client.get('/corporate/cards', { query, ...options });
   }
 
   /**
-   * Immediately changes the frozen status of a corporate card, preventing or
-   * allowing transactions in real-time, critical for security and expense
-   * management.
-   *
-   * @example
-   * ```ts
-   * const corporateCard = await client.corporate.cards.freeze(
-   *   'corp_card_xyz987654',
-   *   { freeze: true },
-   * );
-   * ```
-   */
-  freeze(cardID: string, body: CardFreezeParams, options?: RequestOptions): APIPromise<CorporateCard> {
-    return this._client.post(path`/corporate/cards/${cardID}/freeze`, { body, ...options });
-  }
-
-  /**
-   * Creates and issues a new virtual corporate card with specified spending limits,
-   * merchant restrictions, and expiration dates, ideal for secure online purchases
-   * and temporary projects.
-   *
-   * @example
-   * ```ts
-   * const corporateCard =
-   *   await client.corporate.cards.issueVirtual({
-   *     controls: {},
-   *     holderName: 'Marketing Campaign Q3',
-   *     purpose: 'Online advertising for Q3 product launch.',
-   *   });
-   * ```
+   * Instantly issues a new virtual corporate card for immediate use.
    */
   issueVirtual(body: CardIssueVirtualParams, options?: RequestOptions): APIPromise<CorporateCard> {
     return this._client.post('/corporate/cards/virtual', { body, ...options });
   }
-
-  /**
-   * Updates the sophisticated spending controls, limits, and policy overrides for a
-   * specific corporate card, enabling real-time adjustments for security and budget
-   * adherence.
-   *
-   * @example
-   * ```ts
-   * const corporateCard =
-   *   await client.corporate.cards.updateControls(
-   *     'corp_card_xyz987654',
-   *   );
-   * ```
-   */
-  updateControls(
-    cardID: string,
-    body: CardUpdateControlsParams,
-    options?: RequestOptions,
-  ): APIPromise<CorporateCard> {
-    return this._client.put(path`/corporate/cards/${cardID}/controls`, { body, ...options });
-  }
 }
 
 /**
- * Detailed information for a corporate enterprise card, including its holder,
- * status, and spending controls.
+ * Represents a corporate card.
  */
 export interface CorporateCard {
-  /**
-   * Unique identifier for the corporate card.
-   */
-  id?: string;
+  id: string;
+
+  cardNumberMask: string;
+
+  cardType: 'physical' | 'virtual';
 
   /**
-   * Internal employee ID linked to this card.
+   * Controls for corporate cards.
    */
-  associatedEmployeeId?: string;
+  controls: CorporateCardControls;
 
-  /**
-   * Masked card number for security (first six and last four digits).
-   */
-  cardNumberMask?: string;
+  createdDate: string;
 
-  /**
-   * Type of card: physical or virtual.
-   */
-  cardType?: 'physical' | 'virtual';
+  currency: string;
 
-  /**
-   * Configured spending limits and transaction controls for the card.
-   */
-  controls?: CorporateCardControls;
+  expirationDate: string;
 
-  /**
-   * Date and time the card was issued.
-   */
-  createdDate?: string;
+  frozen: boolean;
 
-  /**
-   * Expiration date of the card.
-   */
-  expirationDate?: string;
+  holderName: string;
 
-  /**
-   * Indicates if the card is temporarily frozen, preventing transactions.
-   */
-  frozen?: boolean;
+  status: 'active' | 'suspended' | 'deactivated' | 'pending_activation';
 
-  /**
-   * Name of the employee or individual holding the card.
-   */
-  holderName?: string;
+  associatedEmployeeId?: string | null;
 
-  /**
-   * ID of the corporate spending policy applied to this card.
-   */
   spendingPolicyId?: string | null;
-
-  /**
-   * Current operational status of the card.
-   */
-  status?: 'Active' | 'Suspended' | 'Lost' | 'Stolen' | 'Cancelled' | 'Expired';
 }
 
 /**
- * Granular spending controls and limits for a corporate card.
+ * Controls for corporate cards.
  */
 export interface CorporateCardControls {
-  /**
-   * Allow or disallow ATM cash withdrawals.
-   */
   atmWithdrawals?: boolean;
 
-  /**
-   * Allow or disallow contactless (NFC) payments.
-   */
   contactlessPayments?: boolean;
 
-  /**
-   * The daily spending limit in USD.
-   */
-  dailyLimit?: number;
+  dailyLimit?: number | null;
 
-  /**
-   * Allow or disallow international transactions.
-   */
   internationalTransactions?: boolean;
 
-  /**
-   * List of allowed merchant categories (MCCs). If empty, all are allowed subject to
-   * other controls.
-   */
-  merchantCategoryRestrictions?: Array<string>;
+  merchantCategoryRestrictions?: Array<string> | null;
 
-  /**
-   * The total spending limit in USD for the current calendar month.
-   */
-  monthlyLimit?: number;
+  monthlyLimit?: number | null;
 
-  /**
-   * Allow or disallow online transactions.
-   */
   onlineTransactions?: boolean;
 
-  /**
-   * The maximum amount for a single transaction in USD.
-   */
-  singleTransactionLimit?: number;
+  singleTransactionLimit?: number | null;
 
-  /**
-   * Specific vendors or merchants that are explicitly allowed or blocked.
-   */
-  vendorRestrictions?: Array<string>;
+  vendorRestrictions?: Array<string> | null;
 }
 
-export type CardListResponse = Array<CorporateCard>;
-
-export interface CardFreezeParams {
+export interface CardListResponse {
   /**
-   * Set to `true` to freeze the card, `false` to unfreeze.
+   * Indicates if there are more pages available.
    */
-  freeze: boolean;
+  hasNextPage: boolean;
+
+  data?: Array<CorporateCard>;
+
+  /**
+   * Cursor to use for the next page request.
+   */
+  endCursor?: string | null;
+}
+
+export interface CardListParams {
+  /**
+   * Cursor for the next page of results.
+   */
+  after?: string;
+
+  /**
+   * Maximum number of items to return.
+   */
+  limit?: number;
 }
 
 export interface CardIssueVirtualParams {
   /**
-   * Specific spending controls and limits for this virtual card. Overrides default
-   * policy if provided.
+   * Controls for corporate cards.
    */
   controls: CorporateCardControls;
 
-  /**
-   * Name or purpose for which the virtual card is issued.
-   */
+  expirationDate: string;
+
   holderName: string;
 
-  /**
-   * Brief description of the virtual card's intended use.
-   */
   purpose: string;
 
-  /**
-   * Optional: Employee ID if this virtual card is tied to a specific employee.
-   */
   associatedEmployeeId?: string | null;
 
-  /**
-   * Optional: Specific expiration date for the virtual card. Defaults to 1 year if
-   * not provided.
-   */
-  expirationDate?: string | null;
-}
-
-export interface CardUpdateControlsParams {
-  /**
-   * Allow or disallow ATM cash withdrawals.
-   */
-  atmWithdrawals?: boolean;
-
-  /**
-   * Allow or disallow contactless (NFC) payments.
-   */
-  contactlessPayments?: boolean;
-
-  /**
-   * The daily spending limit in USD.
-   */
-  dailyLimit?: number;
-
-  /**
-   * Allow or disallow international transactions.
-   */
-  internationalTransactions?: boolean;
-
-  /**
-   * List of allowed merchant categories (MCCs). If empty, all are allowed subject to
-   * other controls.
-   */
-  merchantCategoryRestrictions?: Array<string>;
-
-  /**
-   * The total spending limit in USD for the current calendar month.
-   */
-  monthlyLimit?: number;
-
-  /**
-   * Allow or disallow online transactions.
-   */
-  onlineTransactions?: boolean;
-
-  /**
-   * The maximum amount for a single transaction in USD.
-   */
-  singleTransactionLimit?: number;
-
-  /**
-   * Specific vendors or merchants that are explicitly allowed or blocked.
-   */
-  vendorRestrictions?: Array<string>;
+  spendingPolicyId?: string | null;
 }
 
 export declare namespace Cards {
@@ -281,8 +126,7 @@ export declare namespace Cards {
     type CorporateCard as CorporateCard,
     type CorporateCardControls as CorporateCardControls,
     type CardListResponse as CardListResponse,
-    type CardFreezeParams as CardFreezeParams,
+    type CardListParams as CardListParams,
     type CardIssueVirtualParams as CardIssueVirtualParams,
-    type CardUpdateControlsParams as CardUpdateControlsParams,
   };
 }

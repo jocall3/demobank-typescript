@@ -1,14 +1,13 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as AdvisorAPI from '../ai/advisor';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
 export class Investments extends APIResource {
   /**
-   * Provides an AI-driven analysis of the Environmental, Social, and Governance
-   * (ESG) impact of the user's entire investment portfolio, benchmarking against
-   * industry standards and suggesting more sustainable alternatives.
+   * Analyzes the ESG impact of the user's investment portfolio.
    */
   analyzeImpact(options?: RequestOptions): APIPromise<InvestmentAnalyzeImpactResponse> {
     return this._client.get('/sustainability/investments/impact', options);
@@ -16,78 +15,45 @@ export class Investments extends APIResource {
 }
 
 /**
- * Analysis of the ESG impact of an investment portfolio.
+ * ESG impact of investments.
  */
 export interface InvestmentAnalyzeImpactResponse {
-  /**
-   * AI-identified areas where the portfolio's ESG performance could be improved.
-   */
-  areasForImprovement?: string;
+  aiRecommendations: Array<AdvisorAPI.AIInsight>;
 
-  /**
-   * ESG score breakdown by Environmental, Social, and Governance pillars.
-   */
-  breakdownByPillar?: InvestmentAnalyzeImpactResponse.BreakdownByPillar;
+  benchmarkESGScore: number;
 
-  impactMetrics?: InvestmentAnalyzeImpactResponse.ImpactMetrics;
+  breakdownByESGFactors: InvestmentAnalyzeImpactResponse.BreakdownByEsgFactors;
 
-  /**
-   * Overall ESG rating of the portfolio, based on aggregated holdings.
-   */
-  overallESGRating?: 'AAA' | 'AA' | 'A' | 'BBB' | 'BB' | 'B' | 'CCC';
+  lowestESGHoldings: Array<InvestmentAnalyzeImpactResponse.LowestEsgHolding>;
 
-  /**
-   * The ID of the investment portfolio analyzed.
-   */
-  portfolioId?: string;
+  overallESGScore: number;
 
-  /**
-   * List of top performing assets in terms of ESG within the portfolio.
-   */
-  topESGPerformers?: Array<InvestmentAnalyzeImpactResponse.TopEsgPerformer>;
+  portfolioId: string;
 
-  /**
-   * A composite ESG score (e.g., out of 10).
-   */
-  totalESGScore?: number;
+  topESGHoldings: Array<InvestmentAnalyzeImpactResponse.TopEsgHolding>;
 }
 
 export namespace InvestmentAnalyzeImpactResponse {
-  /**
-   * ESG score breakdown by Environmental, Social, and Governance pillars.
-   */
-  export interface BreakdownByPillar {
-    environmental?: number;
+  export interface BreakdownByEsgFactors {
+    environmentalScore?: number;
 
-    governance?: number;
+    governanceScore?: number;
 
-    social?: number;
+    socialScore?: number;
   }
 
-  export interface ImpactMetrics {
-    /**
-     * Weighted average carbon intensity of holdings.
-     */
-    carbonIntensityScore?: number;
-
-    /**
-     * Composite score for gender diversity in leadership.
-     */
-    genderDiversityScore?: number;
-
-    /**
-     * Percentage of portfolio invested in renewable energy.
-     */
-    renewableEnergyInvestmentPercent?: number;
-  }
-
-  export interface TopEsgPerformer {
+  export interface LowestEsgHolding {
     assetName?: string;
 
-    /**
-     * Percentage of portfolio value.
-     */
-    contributionToPortfolio?: number;
+    assetSymbol?: string;
+
+    esgScore?: number;
+  }
+
+  export interface TopEsgHolding {
+    assetName?: string;
+
+    assetSymbol?: string;
 
     esgScore?: number;
   }

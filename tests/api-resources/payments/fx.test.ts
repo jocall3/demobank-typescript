@@ -10,7 +10,7 @@ const client = new Demobank({
 describe('resource fx', () => {
   // Prism tests are disabled
   test.skip('getRates: only required params', async () => {
-    const responsePromise = client.payments.fx.getRates({ baseCurrency: 'USD', targetCurrency: 'EUR' });
+    const responsePromise = client.payments.fx.getRates({ baseCurrency: 'SEW', targetCurrency: 'SEW' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,8 +23,8 @@ describe('resource fx', () => {
   // Prism tests are disabled
   test.skip('getRates: required and optional params', async () => {
     const response = await client.payments.fx.getRates({
-      baseCurrency: 'USD',
-      targetCurrency: 'EUR',
+      baseCurrency: 'SEW',
+      targetCurrency: 'SEW',
       forecastDays: 1,
     });
   });

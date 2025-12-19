@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as AdvisorAPI from '../ai/advisor';
 import * as InvestmentsAPI from './investments';
 import { InvestmentAnalyzeImpactResponse, Investments } from './investments';
 import { APIPromise } from '../../core/api-promise';
@@ -10,9 +11,7 @@ export class Sustainability extends APIResource {
   investments: InvestmentsAPI.Investments = new InvestmentsAPI.Investments(this._client);
 
   /**
-   * Generates a detailed report of the user's estimated carbon footprint based on
-   * transaction data, lifestyle choices, and AI-driven impact assessments, offering
-   * insights and reduction strategies.
+   * Calculates the user's carbon footprint based on transaction history.
    */
   retrieveCarbonFootprint(
     options?: RequestOptions,
@@ -22,60 +21,39 @@ export class Sustainability extends APIResource {
 }
 
 /**
- * A detailed report of the user's estimated carbon footprint, with breakdown and
- * recommendations.
+ * Carbon footprint report.
  */
 export interface SustainabilityRetrieveCarbonFootprintResponse {
-  /**
-   * Carbon footprint breakdown by spending category.
-   */
-  breakdownByCategory?: Array<SustainabilityRetrieveCarbonFootprintResponse.BreakdownByCategory>;
+  aiInsights: Array<AdvisorAPI.AIInsight>;
 
-  /**
-   * AI-generated comparison to relevant averages.
-   */
-  comparisonToAverage?: string;
+  breakdownByCategory: Array<SustainabilityRetrieveCarbonFootprintResponse.BreakdownByCategory>;
 
-  /**
-   * Amount of carbon offsets purchased (if any) during the period.
-   */
-  offsetsPurchasedKgCO2e?: number;
+  period: string;
 
-  /**
-   * Actionable recommendations to reduce carbon footprint.
-   */
-  recommendations?: Array<SustainabilityRetrieveCarbonFootprintResponse.Recommendation>;
+  reportId: string;
 
-  reportingPeriod?: SustainabilityRetrieveCarbonFootprintResponse.ReportingPeriod;
+  totalCarbonFootprintKgCO2e: number;
 
-  /**
-   * Total estimated carbon footprint for the reporting period (e.g., last month) in
-   * kg CO2e.
-   */
-  totalCarbonFootprintKgCO2e?: number;
+  offsetRecommendations?: Array<SustainabilityRetrieveCarbonFootprintResponse.OffsetRecommendation> | null;
 }
 
 export namespace SustainabilityRetrieveCarbonFootprintResponse {
   export interface BreakdownByCategory {
-    category?: string;
+    carbonFootprintKgCO2e?: number;
 
-    kgCO2e?: number;
+    category?: string;
 
     percentage?: number;
   }
 
-  export interface Recommendation {
-    description?: string;
+  export interface OffsetRecommendation {
+    costPerTonUSD?: number;
 
-    estimatedImpactKgCO2e?: number;
+    offsetAmountKgCO2e?: number;
 
-    title?: string;
-  }
+    project?: string;
 
-  export interface ReportingPeriod {
-    endDate?: string;
-
-    startDate?: string;
+    totalCostUSD?: number;
   }
 }
 

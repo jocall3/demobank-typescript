@@ -4,6 +4,7 @@ export {
   Wallets,
   type CryptoWalletConnection,
   type WalletListResponse,
+  type WalletListParams,
   type WalletConnectParams,
 } from './wallets';
-export { Web3, type Web3ListNFTsResponse } from './web3';
+export { Web3, type Web3ListNFTsResponse, type Web3ListNFTsParams } from './web3';

@@ -4,6 +4,7 @@ import { APIResource } from '../../core/resource';
 import * as WebhooksAPI from './webhooks';
 import {
   WebhookCreateParams,
+  WebhookListParams,
   WebhookListResponse,
   WebhookSubscription,
   WebhookUpdateParams,
@@ -23,5 +24,6 @@ export declare namespace Developers {
     type WebhookListResponse as WebhookListResponse,
     type WebhookCreateParams as WebhookCreateParams,
     type WebhookUpdateParams as WebhookUpdateParams,
+    type WebhookListParams as WebhookListParams,
   };
 }
