@@ -21,28 +21,20 @@ describe('resource cards', () => {
   });
 
   // Prism tests are disabled
-  test.skip('freeze: only required params', async () => {
-    const responsePromise = client.corporate.cards.freeze('corp_card_xyz987654', { freeze: true });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  // Prism tests are disabled
-  test.skip('freeze: required and optional params', async () => {
-    const response = await client.corporate.cards.freeze('corp_card_xyz987654', { freeze: true });
+  test.skip('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.corporate.cards.list({ after: 'after', limit: 1 }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Demobank.NotFoundError);
   });
 
   // Prism tests are disabled
   test.skip('issueVirtual: only required params', async () => {
     const responsePromise = client.corporate.cards.issueVirtual({
       controls: {},
-      holderName: 'Marketing Campaign Q3',
-      purpose: 'Online advertising for Q3 product launch.',
+      expirationDate: '2019-12-27',
+      holderName: 'holderName',
+      purpose: 'purpose',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -59,30 +51,19 @@ describe('resource cards', () => {
       controls: {
         atmWithdrawals: true,
         contactlessPayments: true,
-        dailyLimit: 500,
-        internationalTransactions: false,
-        merchantCategoryRestrictions: ['Restaurants', 'Travel', 'Office Supplies'],
-        monthlyLimit: 2500,
+        dailyLimit: 0,
+        internationalTransactions: true,
+        merchantCategoryRestrictions: ['string'],
+        monthlyLimit: 0,
         onlineTransactions: true,
-        singleTransactionLimit: 1000,
-        vendorRestrictions: ['Amazon', 'Uber'],
+        singleTransactionLimit: 0,
+        vendorRestrictions: ['string'],
       },
-      holderName: 'Marketing Campaign Q3',
-      purpose: 'Online advertising for Q3 product launch.',
-      associatedEmployeeId: 'emp_marketing_01',
-      expirationDate: '2025-09-30',
+      expirationDate: '2019-12-27',
+      holderName: 'holderName',
+      purpose: 'purpose',
+      associatedEmployeeId: 'associatedEmployeeId',
+      spendingPolicyId: 'spendingPolicyId',
     });
-  });
-
-  // Prism tests are disabled
-  test.skip('updateControls', async () => {
-    const responsePromise = client.corporate.cards.updateControls('corp_card_xyz987654', {});
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
   });
 });

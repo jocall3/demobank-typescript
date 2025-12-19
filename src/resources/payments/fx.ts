@@ -6,17 +6,7 @@ import { RequestOptions } from '../../internal/request-options';
 
 export class Fx extends APIResource {
   /**
-   * Retrieves current and AI-predicted future foreign exchange rates for a specified
-   * currency pair, including bid/ask spreads and historical volatility data for
-   * informed decisions.
-   *
-   * @example
-   * ```ts
-   * const response = await client.payments.fx.getRates({
-   *   baseCurrency: 'USD',
-   *   targetCurrency: 'EUR',
-   * });
-   * ```
+   * Retrieves current and forecasted foreign exchange rates.
    */
   getRates(query: FxGetRatesParams, options?: RequestOptions): APIPromise<FxGetRatesResponse> {
     return this._client.get('/payments/fx/rates', { query, ...options });
@@ -24,33 +14,21 @@ export class Fx extends APIResource {
 }
 
 /**
- * Real-time and predictive foreign exchange rates.
+ * FX rate data.
  */
 export interface FxGetRatesResponse {
-  baseCurrency?: string;
+  baseCurrency: string;
 
-  /**
-   * Real-time bid, ask, and mid-market rates.
-   */
-  currentRate?: FxGetRatesResponse.CurrentRate;
+  currentRate: FxGetRatesResponse.CurrentRate;
 
-  /**
-   * Historical volatility metrics for the currency pair.
-   */
-  historicalVolatility?: FxGetRatesResponse.HistoricalVolatility;
+  targetCurrency: string;
 
-  /**
-   * AI-predicted FX rates for future dates with confidence intervals.
-   */
-  predictiveRates?: Array<FxGetRatesResponse.PredictiveRate>;
+  historicalVolatility?: FxGetRatesResponse.HistoricalVolatility | null;
 
-  targetCurrency?: string;
+  predictiveRates?: Array<FxGetRatesResponse.PredictiveRate> | null;
 }
 
 export namespace FxGetRatesResponse {
-  /**
-   * Real-time bid, ask, and mid-market rates.
-   */
   export interface CurrentRate {
     ask?: number;
 
@@ -61,9 +39,6 @@ export namespace FxGetRatesResponse {
     timestamp?: string;
   }
 
-  /**
-   * Historical volatility metrics for the currency pair.
-   */
   export interface HistoricalVolatility {
     past30Days?: number;
 
@@ -71,9 +46,6 @@ export namespace FxGetRatesResponse {
   }
 
   export interface PredictiveRate {
-    /**
-     * AI's confidence in the prediction.
-     */
     aiModelConfidence?: number;
 
     confidenceIntervalLower?: number;
@@ -88,17 +60,17 @@ export namespace FxGetRatesResponse {
 
 export interface FxGetRatesParams {
   /**
-   * The base currency code (e.g., USD).
+   * Base currency code (e.g., USD).
    */
   baseCurrency: string;
 
   /**
-   * The target currency code (e.g., EUR).
+   * Target currency code (e.g., EUR).
    */
   targetCurrency: string;
 
   /**
-   * Number of days into the future to provide an AI-driven prediction.
+   * Number of days to forecast rates.
    */
   forecastDays?: number;
 }

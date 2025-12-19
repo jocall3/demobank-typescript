@@ -1,14 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export { AI } from './ai/ai';
-export {
-  Accounts,
-  type LinkedAccount,
-  type AccountListResponse,
-  type AccountLinkResponse,
-  type AccountRetrieveDetailsResponse,
-  type AccountLinkParams,
-} from './accounts';
+export { Accounts, type LinkedAccount, type AccountLinkResponse, type AccountLinkParams } from './accounts';
 export { Corporate } from './corporate/corporate';
 export { Developers } from './developers/developers';
 export { Identity } from './identity/identity';
@@ -24,8 +17,7 @@ export {
   type TransactionListResponse,
   type TransactionDisputeResponse,
   type TransactionListParams,
-  type TransactionCategorizeParams,
   type TransactionDisputeParams,
 } from './transactions';
 export { Users } from './users/users';
-export { Web3, type Web3ListNFTsResponse } from './web3/web3';
+export { Web3, type Web3ListNFTsResponse, type Web3ListNFTsParams } from './web3/web3';

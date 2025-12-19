@@ -5,9 +5,9 @@ export { Ads, type AdGetGenerationStatusResponse } from './ads/index';
 export {
   Advisor,
   type AIInsight,
-  type AIToolCall,
   type AdvisorListToolsResponse,
   type AdvisorSendMessageResponse,
+  type AdvisorListToolsParams,
   type AdvisorSendMessageParams,
 } from './advisor';
 export { Incubator } from './incubator/index';

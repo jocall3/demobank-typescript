@@ -21,11 +21,20 @@ describe('resource wallets', () => {
   });
 
   // Prism tests are disabled
+  test.skip('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.web3.wallets.list({ after: 'after', limit: 1 }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Demobank.NotFoundError);
+  });
+
+  // Prism tests are disabled
   test.skip('connect: only required params', async () => {
     const responsePromise = client.web3.wallets.connect({
-      signedMessage: '0xabcdef1234567890...',
-      walletAddress: '0x123abc...',
-      walletProvider: 'MetaMask',
+      blockchainNetwork: 'blockchainNetwork',
+      signedMessage: 'signedMessage',
+      walletAddress: 'walletAddress',
+      walletProvider: 'walletProvider',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -39,10 +48,11 @@ describe('resource wallets', () => {
   // Prism tests are disabled
   test.skip('connect: required and optional params', async () => {
     const response = await client.web3.wallets.connect({
-      signedMessage: '0xabcdef1234567890...',
-      walletAddress: '0x123abc...',
-      walletProvider: 'MetaMask',
-      blockchainNetwork: 'Ethereum',
+      blockchainNetwork: 'blockchainNetwork',
+      signedMessage: 'signedMessage',
+      walletAddress: 'walletAddress',
+      walletProvider: 'walletProvider',
+      requestWriteAccess: true,
     });
   });
 });

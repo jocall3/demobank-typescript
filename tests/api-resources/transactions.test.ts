@@ -10,7 +10,7 @@ const client = new Demobank({
 describe('resource transactions', () => {
   // Prism tests are disabled
   test.skip('retrieve', async () => {
-    const responsePromise = client.transactions.retrieve('txn_quantum-2024-07-21-A7B8C9');
+    const responsePromise = client.transactions.retrieve('transactionId');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,14 +38,14 @@ describe('resource transactions', () => {
     await expect(
       client.transactions.list(
         {
-          category: 'Groceries',
-          endDate: '2024-12-31',
+          after: 'after',
+          category: 'category',
+          endDate: '2019-12-27',
           limit: 1,
           maxAmount: 0,
           minAmount: 0,
-          offset: 0,
-          searchQuery: 'Starbucks',
-          startDate: '2024-01-01',
+          searchQuery: 'searchQuery',
+          startDate: '2019-12-27',
           type: 'income',
         },
         { path: '/_stainless_unknown_path' },
@@ -54,31 +54,9 @@ describe('resource transactions', () => {
   });
 
   // Prism tests are disabled
-  test.skip('categorize: only required params', async () => {
-    const responsePromise = client.transactions.categorize('txn_quantum-2024-07-21-A7B8C9', {
-      category: 'Business Expenses > Client Entertainment',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  // Prism tests are disabled
-  test.skip('categorize: required and optional params', async () => {
-    const response = await client.transactions.categorize('txn_quantum-2024-07-21-A7B8C9', {
-      category: 'Business Expenses > Client Entertainment',
-      applyToFuture: true,
-      notes: 'Meeting with client for project Alpha.',
-    });
-  });
-
-  // Prism tests are disabled
   test.skip('dispute: only required params', async () => {
-    const responsePromise = client.transactions.dispute('txn_quantum-2024-07-21-A7B8C9', {
+    const responsePromise = client.transactions.dispute('transactionId', {
+      details: 'details',
       reason: 'unauthorized',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -92,10 +70,10 @@ describe('resource transactions', () => {
 
   // Prism tests are disabled
   test.skip('dispute: required and optional params', async () => {
-    const response = await client.transactions.dispute('txn_quantum-2024-07-21-A7B8C9', {
+    const response = await client.transactions.dispute('transactionId', {
+      details: 'details',
       reason: 'unauthorized',
-      details: 'I did not authorize this purchase. My card may have been compromised.',
-      supportingDocuments: ['https://demobank.com/uploads/proof_of_non_purchase.png'],
+      supportingDocuments: ['https://example.com'],
     });
   });
 });

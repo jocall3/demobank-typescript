@@ -26,13 +26,13 @@ describe('resource anomalies', () => {
     await expect(
       client.corporate.anomalies.list(
         {
-          endDate: '2024-12-31',
-          entityType: 'PaymentOrder',
+          after: 'after',
+          endDate: '2019-12-27',
+          entityType: 'payment_order',
           limit: 1,
-          offset: 0,
-          severity: 'Low',
-          startDate: '2024-01-01',
-          status: 'New',
+          severity: 'low',
+          startDate: '2019-12-27',
+          status: 'new',
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -41,9 +41,7 @@ describe('resource anomalies', () => {
 
   // Prism tests are disabled
   test.skip('updateStatus: only required params', async () => {
-    const responsePromise = client.corporate.anomalies.updateStatus('anom_risk-2024-07-21-D1E2F3', {
-      status: 'Resolved',
-    });
+    const responsePromise = client.corporate.anomalies.updateStatus('anomalyId', { status: 'dismissed' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -55,9 +53,9 @@ describe('resource anomalies', () => {
 
   // Prism tests are disabled
   test.skip('updateStatus: required and optional params', async () => {
-    const response = await client.corporate.anomalies.updateStatus('anom_risk-2024-07-21-D1E2F3', {
-      status: 'Resolved',
-      resolutionNotes: 'Confirmed legitimate transaction after contacting vendor. Marked as resolved.',
+    const response = await client.corporate.anomalies.updateStatus('anomalyId', {
+      status: 'dismissed',
+      resolutionNotes: 'resolutionNotes',
     });
   });
 });
