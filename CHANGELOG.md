@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1 (2025-12-20)
+
+Full Changelog: [v0.1.0...v0.1.1](https://github.com/jocall3/demobank-typescript/compare/v0.1.0...v0.1.1)
+
+### Chores
+
+* **internal:** codegen related update ([7b1058d](https://github.com/jocall3/demobank-typescript/commit/7b1058d5c5b4a63d8eac2d190261746c1e6c0585))
+
 ## 0.1.0 (2025-12-19)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/jocall3/demobank-typescript/compare/v0.0.1...v0.1.0)
