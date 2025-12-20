@@ -1,6 +1,6 @@
 {
   "name": "demobank",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The official TypeScript library for the Demobank API",
   "author": "Demobank <>",
   "types": "dist/index.d.ts",
