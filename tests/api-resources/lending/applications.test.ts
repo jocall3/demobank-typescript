@@ -43,7 +43,11 @@ describe('resource applications', () => {
       loanPurpose: 'home_improvement',
       repaymentTermMonths: 0,
       additionalNotes: 'additionalNotes',
-      coApplicant: { email: 'dev@stainless.com', income: 0, name: 'name' },
+      coApplicant: {
+        email: 'dev@stainless.com',
+        income: 0,
+        name: 'name',
+      },
     });
   });
 });
