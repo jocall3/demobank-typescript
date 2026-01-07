@@ -30,7 +30,11 @@ describe('resource rules', () => {
   // Prism tests are disabled
   test.skip('create: required and optional params', async () => {
     const response = await client.corporate.risk.fraud.rules.create({
-      action: { details: 'details', type: 'block', targetTeam: 'targetTeam' },
+      action: {
+        details: 'details',
+        type: 'block',
+        targetTeam: 'targetTeam',
+      },
       criteria: {
         accountInactivityDays: 0,
         countryOfOrigin: ['string'],

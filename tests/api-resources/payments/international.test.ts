@@ -12,7 +12,11 @@ describe('resource international', () => {
   test.skip('initiate: only required params', async () => {
     const responsePromise = client.payments.international.initiate({
       amount: 0,
-      beneficiary: { address: 'address', bankName: 'bankName', name: 'name' },
+      beneficiary: {
+        address: 'address',
+        bankName: 'bankName',
+        name: 'name',
+      },
       purpose: 'purpose',
       sourceAccountId: 'sourceAccountId',
       sourceCurrency: 'SEW',

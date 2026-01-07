@@ -22,14 +22,23 @@ describe('resource simulate', () => {
 
   // Prism tests are disabled
   test.skip('run: required and optional params', async () => {
-    const response = await client.ai.oracle.simulate.run({ prompt: 'prompt', parameters: {} });
+    const response = await client.ai.oracle.simulate.run({
+      prompt: 'prompt',
+      parameters: {},
+    });
   });
 
   // Prism tests are disabled
   test.skip('runAdvanced: only required params', async () => {
     const responsePromise = client.ai.oracle.simulate.runAdvanced({
       prompt: 'prompt',
-      scenarios: [{ durationYears: 0, events: [{}], name: 'name' }],
+      scenarios: [
+        {
+          durationYears: 0,
+          events: [{}],
+          name: 'name',
+        },
+      ],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -47,9 +56,21 @@ describe('resource simulate', () => {
       scenarios: [
         {
           durationYears: 0,
-          events: [{ details: {}, type: 'job_loss' }],
+          events: [
+            {
+              details: {},
+              type: 'job_loss',
+            },
+          ],
           name: 'name',
-          sensitivityAnalysisParams: [{ max: 0, min: 0, paramName: 'paramName', step: 0 }],
+          sensitivityAnalysisParams: [
+            {
+              max: 0,
+              min: 0,
+              paramName: 'paramName',
+              step: 0,
+            },
+          ],
         },
       ],
       globalEconomicFactors: { inflationRate: 0, interestRateBaseline: 0 },

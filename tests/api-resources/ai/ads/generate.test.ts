@@ -63,7 +63,11 @@ describe('resource generate', () => {
       backgroundMusicGenre: 'corporate',
       brandAssets: ['https://example.com'],
       brandColors: ['#Afd'],
-      callToAction: { displayTimeSeconds: 0, text: 'text', url: 'https://example.com' },
+      callToAction: {
+        displayTimeSeconds: 0,
+        text: 'text',
+        url: 'https://example.com',
+      },
       keywords: ['string'],
       voiceoverStyle: 'male_professional',
       voiceoverText: 'voiceoverText',
