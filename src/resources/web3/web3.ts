@@ -3,8 +3,8 @@
 import { APIResource } from '../../core/resource';
 import * as WalletsAPI from './wallets';
 import {
-  CryptoWalletConnection,
   WalletConnectParams,
+  WalletConnectResponse,
   WalletListParams,
   WalletListResponse,
   Wallets,
@@ -16,79 +16,32 @@ export class Web3 extends APIResource {
   wallets: WalletsAPI.Wallets = new WalletsAPI.Wallets(this._client);
 
   /**
-   * Retrieves a list of NFTs owned by the user across connected wallets.
+   * Fetches a comprehensive list of Non-Fungible Tokens (NFTs) owned by the user
+   * across all connected wallets and supported blockchain networks, including
+   * metadata and market values.
+   *
+   * @example
+   * ```ts
+   * const response = await client.web3.listNFTs();
+   * ```
    */
-  listNFTs(
-    query: Web3ListNFTsParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<Web3ListNFTsResponse> {
+  listNFTs(query: Web3ListNFTsParams | null | undefined = {}, options?: RequestOptions): APIPromise<unknown> {
     return this._client.get('/web3/nfts', { query, ...options });
   }
 }
 
-export interface Web3ListNFTsResponse {
-  /**
-   * Indicates if there are more pages available.
-   */
-  hasNextPage: boolean;
-
-  data?: Array<Web3ListNFTsResponse.Data>;
-
-  /**
-   * Cursor to use for the next page request.
-   */
-  endCursor?: string | null;
-}
-
-export namespace Web3ListNFTsResponse {
-  /**
-   * NFT asset details.
-   */
-  export interface Data {
-    id: string;
-
-    blockchainNetwork: string;
-
-    collectionName: string;
-
-    contractAddress: string;
-
-    imageUrl: string;
-
-    name: string;
-
-    ownerAddress: string;
-
-    tokenId: string;
-
-    attributes?: Array<Data.Attribute> | null;
-
-    description?: string | null;
-
-    estimatedValueUSD?: number | null;
-
-    lastSalePriceUSD?: number | null;
-  }
-
-  export namespace Data {
-    export interface Attribute {
-      trait_type?: string;
-
-      value?: string;
-    }
-  }
-}
+export type Web3ListNFTsResponse = unknown;
 
 export interface Web3ListNFTsParams {
   /**
-   * Cursor for the next page of results.
-   */
-  after?: string;
-
-  /**
-   * Maximum number of items to return.
+   * Maximum number of items to return in a single page.
    */
   limit?: number;
+
+  /**
+   * Number of items to skip before starting to collect the result set.
+   */
+  offset?: number;
 }
 
 Web3.Wallets = Wallets;
@@ -98,8 +51,8 @@ export declare namespace Web3 {
 
   export {
     Wallets as Wallets,
-    type CryptoWalletConnection as CryptoWalletConnection,
     type WalletListResponse as WalletListResponse,
+    type WalletConnectResponse as WalletConnectResponse,
     type WalletListParams as WalletListParams,
     type WalletConnectParams as WalletConnectParams,
   };

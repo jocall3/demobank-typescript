@@ -6,73 +6,42 @@ import { RequestOptions } from '../../internal/request-options';
 
 export class Fx extends APIResource {
   /**
-   * Retrieves current and forecasted foreign exchange rates.
+   * Retrieves current and AI-predicted future foreign exchange rates for a specified
+   * currency pair, including bid/ask spreads and historical volatility data for
+   * informed decisions.
    */
-  getRates(query: FxGetRatesParams, options?: RequestOptions): APIPromise<FxGetRatesResponse> {
+  getRates(
+    query: FxGetRatesParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<FxGetRatesResponse> {
     return this._client.get('/payments/fx/rates', { query, ...options });
   }
 }
 
-/**
- * FX rate data.
- */
 export interface FxGetRatesResponse {
-  baseCurrency: string;
+  /**
+   * Real-time foreign exchange rates.
+   */
+  currentRate: unknown;
 
-  currentRate: FxGetRatesResponse.CurrentRate;
-
-  targetCurrency: string;
-
-  historicalVolatility?: FxGetRatesResponse.HistoricalVolatility | null;
-
-  predictiveRates?: Array<FxGetRatesResponse.PredictiveRate> | null;
-}
-
-export namespace FxGetRatesResponse {
-  export interface CurrentRate {
-    ask?: number;
-
-    bid?: number;
-
-    mid?: number;
-
-    timestamp?: string;
-  }
-
-  export interface HistoricalVolatility {
-    past30Days?: number;
-
-    past7Days?: number;
-  }
-
-  export interface PredictiveRate {
-    aiModelConfidence?: number;
-
-    confidenceIntervalLower?: number;
-
-    confidenceIntervalUpper?: number;
-
-    date?: string;
-
-    predictedMidRate?: number;
-  }
+  historicalVolatility?: unknown;
 }
 
 export interface FxGetRatesParams {
   /**
-   * Base currency code (e.g., USD).
+   * The base currency code (e.g., USD).
    */
-  baseCurrency: string;
+  baseCurrency?: string;
 
   /**
-   * Target currency code (e.g., EUR).
-   */
-  targetCurrency: string;
-
-  /**
-   * Number of days to forecast rates.
+   * Number of days into the future to provide an AI-driven prediction.
    */
   forecastDays?: number;
+
+  /**
+   * The target currency code (e.g., EUR).
+   */
+  targetCurrency?: string;
 }
 
 export declare namespace Fx {

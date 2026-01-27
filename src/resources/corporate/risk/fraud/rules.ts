@@ -6,185 +6,35 @@ import { RequestOptions } from '../../../../internal/request-options';
 
 export class Rules extends APIResource {
   /**
-   * Creates a new fraud detection rule.
+   * Retrieves a list of AI-powered fraud detection rules currently active for the
+   * organization, including their parameters, thresholds, and associated actions
+   * (e.g., flag, block, alert).
+   *
+   * @example
+   * ```ts
+   * const rules =
+   *   await client.corporate.risk.fraud.rules.list();
+   * ```
    */
-  create(body: RuleCreateParams, options?: RequestOptions): APIPromise<FraudRule> {
-    return this._client.post('/corporate/risk/fraud/rules', { body, ...options });
-  }
-
-  /**
-   * Lists configured fraud detection rules.
-   */
-  list(
-    query: RuleListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<RuleListResponse> {
+  list(query: RuleListParams | null | undefined = {}, options?: RequestOptions): APIPromise<unknown> {
     return this._client.get('/corporate/risk/fraud/rules', { query, ...options });
   }
 }
 
-/**
- * Fraud detection rule.
- */
-export interface FraudRule {
-  id: string;
-
-  /**
-   * Action to take on fraud detection.
-   */
-  action: FraudRule.Action;
-
-  createdAt: string;
-
-  createdBy: string;
-
-  /**
-   * Criteria for fraud detection.
-   */
-  criteria: FraudRule.Criteria;
-
-  description: string;
-
-  lastUpdated: string;
-
-  name: string;
-
-  severity: 'low' | 'medium' | 'high' | 'critical';
-
-  status: 'active' | 'inactive' | 'draft';
-}
-
-export namespace FraudRule {
-  /**
-   * Action to take on fraud detection.
-   */
-  export interface Action {
-    details: string;
-
-    type: 'block' | 'alert' | 'auto_review' | 'manual_review' | 'request_mfa';
-
-    targetTeam?: string | null;
-  }
-
-  /**
-   * Criteria for fraud detection.
-   */
-  export interface Criteria {
-    accountInactivityDays?: number | null;
-
-    countryOfOrigin?: Array<string> | null;
-
-    geographicDistanceKm?: number | null;
-
-    lastLoginDays?: number | null;
-
-    noTravelNotification?: boolean | null;
-
-    paymentCountMin?: number | null;
-
-    recipientCountryRiskLevel?: Array<'low' | 'medium' | 'high' | 'very_high'> | null;
-
-    recipientNew?: boolean | null;
-
-    timeframeHours?: number | null;
-
-    transactionAmountMin?: number | null;
-
-    transactionType?: 'debit' | 'credit' | null;
-  }
-}
-
-export interface RuleListResponse {
-  /**
-   * Indicates if there are more pages available.
-   */
-  hasNextPage: boolean;
-
-  data?: Array<FraudRule>;
-
-  /**
-   * Cursor to use for the next page request.
-   */
-  endCursor?: string | null;
-}
-
-export interface RuleCreateParams {
-  /**
-   * Action to take on fraud detection.
-   */
-  action: RuleCreateParams.Action;
-
-  /**
-   * Criteria for fraud detection.
-   */
-  criteria: RuleCreateParams.Criteria;
-
-  description: string;
-
-  name: string;
-
-  severity: 'low' | 'medium' | 'high' | 'critical';
-
-  status: 'active' | 'inactive' | 'draft';
-}
-
-export namespace RuleCreateParams {
-  /**
-   * Action to take on fraud detection.
-   */
-  export interface Action {
-    details: string;
-
-    type: 'block' | 'alert' | 'auto_review' | 'manual_review' | 'request_mfa';
-
-    targetTeam?: string | null;
-  }
-
-  /**
-   * Criteria for fraud detection.
-   */
-  export interface Criteria {
-    accountInactivityDays?: number | null;
-
-    countryOfOrigin?: Array<string> | null;
-
-    geographicDistanceKm?: number | null;
-
-    lastLoginDays?: number | null;
-
-    noTravelNotification?: boolean | null;
-
-    paymentCountMin?: number | null;
-
-    recipientCountryRiskLevel?: Array<'low' | 'medium' | 'high' | 'very_high'> | null;
-
-    recipientNew?: boolean | null;
-
-    timeframeHours?: number | null;
-
-    transactionAmountMin?: number | null;
-
-    transactionType?: 'debit' | 'credit' | null;
-  }
-}
+export type RuleListResponse = unknown;
 
 export interface RuleListParams {
   /**
-   * Cursor for the next page of results.
-   */
-  after?: string;
-
-  /**
-   * Maximum number of items to return.
+   * Maximum number of items to return in a single page.
    */
   limit?: number;
+
+  /**
+   * Number of items to skip before starting to collect the result set.
+   */
+  offset?: number;
 }
 
 export declare namespace Rules {
-  export {
-    type FraudRule as FraudRule,
-    type RuleListResponse as RuleListResponse,
-    type RuleCreateParams as RuleCreateParams,
-    type RuleListParams as RuleListParams,
-  };
+  export { type RuleListResponse as RuleListResponse, type RuleListParams as RuleListParams };
 }

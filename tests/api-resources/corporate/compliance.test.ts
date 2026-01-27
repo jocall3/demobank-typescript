@@ -2,20 +2,12 @@
 
 import Demobank from 'demobank';
 
-const client = new Demobank({
-  apiKey: 'My API Key',
-  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-});
+const client = new Demobank({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
 describe('resource compliance', () => {
   // Prism tests are disabled
-  test.skip('requestAudit: only required params', async () => {
-    const responsePromise = client.corporate.compliance.requestAudit({
-      auditScope: 'all_transactions',
-      endDate: '2019-12-27',
-      regulatoryFrameworks: ['AML'],
-      startDate: '2019-12-27',
-    });
+  test.skip('requestAudit', async () => {
+    const responsePromise = client.corporate.compliance.requestAudit({});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,16 +15,5 @@ describe('resource compliance', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  // Prism tests are disabled
-  test.skip('requestAudit: required and optional params', async () => {
-    const response = await client.corporate.compliance.requestAudit({
-      auditScope: 'all_transactions',
-      endDate: '2019-12-27',
-      regulatoryFrameworks: ['AML'],
-      startDate: '2019-12-27',
-      additionalContext: 'additionalContext',
-    });
   });
 });

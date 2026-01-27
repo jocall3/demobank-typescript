@@ -3,148 +3,96 @@
 import { APIResource } from '../../../core/resource';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
+import { path } from '../../../internal/utils/path';
 
 export class Pitch extends APIResource {
   /**
-   * Submits a new business pitch to the Quantum Weaver incubator for AI analysis.
+   * Retrieves the granular AI-driven analysis, strategic feedback, market validation
+   * results, and any outstanding questions from Quantum Weaver for a specific
+   * business pitch.
+   *
+   * @example
+   * ```ts
+   * const response = await client.ai.incubator.pitch.getDetails(
+   *   'pitch_qw_synergychain-xyz',
+   * );
+   * ```
    */
-  submit(body: PitchSubmitParams, options?: RequestOptions): APIPromise<QuantumWeaverState> {
+  getDetails(pitchID: string, options?: RequestOptions): APIPromise<PitchGetDetailsResponse> {
+    return this._client.get(path`/ai/incubator/pitch/${pitchID}/details`, options);
+  }
+
+  /**
+   * Submits a detailed business plan to the Quantum Weaver AI for rigorous analysis,
+   * market validation, and seed funding consideration. This initiates the AI-driven
+   * incubation journey, aiming to transform innovative ideas into commercially
+   * successful ventures.
+   *
+   * @example
+   * ```ts
+   * const response = await client.ai.incubator.pitch.submit({
+   *   financialProjections: {
+   *     seedRoundAmount: 2500000,
+   *     valuationPreMoney: 10000000,
+   *     projectionYears: 3,
+   *     revenueForecast: [500000, 2000000, 6000000],
+   *     profitabilityEstimate:
+   *       'Achieve profitability within 18 months.',
+   *   },
+   * });
+   * ```
+   */
+  submit(body: PitchSubmitParams, options?: RequestOptions): APIPromise<unknown> {
     return this._client.post('/ai/incubator/pitch', { body, ...options });
   }
 }
 
-/**
- * State of a business pitch.
- */
-export interface QuantumWeaverState {
-  lastUpdated: string;
+export interface PitchGetDetailsResponse {
+  /**
+   * AI-generated coaching plan for the entrepreneur.
+   */
+  aiCoachingPlan?: unknown;
 
-  nextSteps: string;
+  /**
+   * AI's detailed financial model analysis.
+   */
+  aiFinancialModel?: PitchGetDetailsResponse.AIFinancialModel;
 
-  pitchId: string;
+  /**
+   * AI's detailed market analysis.
+   */
+  aiMarketAnalysis?: unknown;
 
-  stage:
-    | 'submitted'
-    | 'initial_review'
-    | 'ai_analysis'
-    | 'feedback_required'
-    | 'test_phase'
-    | 'final_review'
-    | 'approved_for_funding'
-    | 'rejected'
-    | 'incubated_graduated';
-
-  statusMessage: string;
-
-  aiCoachingPlan?: QuantumWeaverState.AICoachingPlan | null;
-
-  aiFinancialModel?: QuantumWeaverState.AIFinancialModel | null;
-
-  aiMarketAnalysis?: QuantumWeaverState.AIMarketAnalysis | null;
-
-  aiRiskAssessment?: QuantumWeaverState.AIRiskAssessment | null;
-
-  estimatedFundingOffer?: number | null;
-
-  feedbackSummary?: string | null;
-
-  investorMatchScore?: number | null;
-
-  questions?: Array<QuantumWeaverState.Question> | null;
+  /**
+   * AI's assessment of risks associated with the venture.
+   */
+  aiRiskAssessment?: unknown;
 }
 
-export namespace QuantumWeaverState {
-  export interface AICoachingPlan {
-    steps?: Array<AICoachingPlan.Step>;
-
-    summary?: string;
-
-    title?: string;
-  }
-
-  export namespace AICoachingPlan {
-    export interface Step {
-      description?: string;
-
-      resources?: Array<Step.Resource>;
-
-      status?: 'pending' | 'in_progress' | 'completed';
-
-      timeline?: string;
-
-      title?: string;
-    }
-
-    export namespace Step {
-      export interface Resource {
-        name?: string;
-
-        url?: string;
-      }
-    }
-  }
-
+export namespace PitchGetDetailsResponse {
+  /**
+   * AI's detailed financial model analysis.
+   */
   export interface AIFinancialModel {
-    breakevenPoint?: string;
-
-    capitalRequirements?: number;
-
     costStructureAnalysis?: unknown;
 
     revenueBreakdown?: unknown;
-
-    sensitivityAnalysis?: Array<AIFinancialModel.SensitivityAnalysis>;
-  }
-
-  export namespace AIFinancialModel {
-    export interface SensitivityAnalysis {
-      projectedIRR?: number;
-
-      scenario?: string;
-
-      terminalValue?: number;
-    }
-  }
-
-  export interface AIMarketAnalysis {
-    competitiveAdvantages?: Array<string>;
-
-    growthOpportunities?: string;
-
-    riskFactors?: string;
-
-    targetMarketSize?: string;
-  }
-
-  export interface AIRiskAssessment {
-    marketRisk?: string;
-
-    teamRisk?: string;
-
-    technicalRisk?: string;
-  }
-
-  export interface Question {
-    id?: string;
-
-    category?: string;
-
-    isRequired?: boolean;
-
-    question?: string;
   }
 }
 
+export type PitchSubmitResponse = unknown;
+
 export interface PitchSubmitParams {
-  businessPlan: string;
-
+  /**
+   * Key financial metrics and projections for the next 3-5 years.
+   */
   financialProjections: unknown;
-
-  foundingTeam: Array<unknown>;
-
-  marketOpportunity: string;
 }
 
 export declare namespace Pitch {
-  export { type QuantumWeaverState as QuantumWeaverState, type PitchSubmitParams as PitchSubmitParams };
+  export {
+    type PitchGetDetailsResponse as PitchGetDetailsResponse,
+    type PitchSubmitResponse as PitchSubmitResponse,
+    type PitchSubmitParams as PitchSubmitParams,
+  };
 }

@@ -6,143 +6,67 @@ import { RequestOptions } from '../../internal/request-options';
 
 export class Advisor extends APIResource {
   /**
-   * Lists the available tools that the AI Advisor can utilize during a chat session.
+   * Retrieves a dynamic manifest of all integrated AI tools that Quantum can invoke
+   * and execute, providing details on their capabilities, parameters, and access
+   * requirements.
+   *
+   * @example
+   * ```ts
+   * const response = await client.ai.advisor.listTools();
+   * ```
    */
   listTools(
     query: AdvisorListToolsParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<AdvisorListToolsResponse> {
+  ): APIPromise<unknown> {
     return this._client.get('/ai/advisor/tools', { query, ...options });
   }
 
   /**
-   * Sends a message to the Quantum AI Advisor and receives a response, potentially
-   * including tool calls.
+   * Initiates or continues a sophisticated conversation with Quantum, the AI
+   * Advisor. Quantum can provide advanced financial insights, execute complex tasks
+   * via an expanding suite of intelligent tools, and learn from user interactions to
+   * offer hyper-personalized guidance.
+   *
+   * @example
+   * ```ts
+   * const response = await client.ai.advisor.sendMessage();
+   * ```
    */
   sendMessage(
-    body: AdvisorSendMessageParams,
+    body: AdvisorSendMessageParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<AdvisorSendMessageResponse> {
+  ): APIPromise<unknown> {
     return this._client.post('/ai/advisor/chat', { body, ...options });
   }
 }
 
-/**
- * AI-generated insight.
- */
-export interface AIInsight {
-  id: string;
+export type AdvisorListToolsResponse = unknown;
 
-  category:
-    | 'spending'
-    | 'saving'
-    | 'investing'
-    | 'budgeting'
-    | 'security'
-    | 'financial_goals'
-    | 'sustainability'
-    | 'corporate_treasury'
-    | 'compliance'
-    | 'other';
-
-  description: string;
-
-  severity: 'low' | 'medium' | 'high' | 'critical';
-
-  timestamp: string;
-
-  title: string;
-
-  actionableRecommendation?: string | null;
-
-  actionTrigger?: string | null;
-}
-
-export interface AdvisorListToolsResponse {
-  /**
-   * Indicates if there are more pages available.
-   */
-  hasNextPage: boolean;
-
-  data?: Array<AdvisorListToolsResponse.Data>;
-
-  /**
-   * Cursor to use for the next page request.
-   */
-  endCursor?: string | null;
-}
-
-export namespace AdvisorListToolsResponse {
-  /**
-   * Definition of an AI tool.
-   */
-  export interface Data {
-    accessScope: string;
-
-    description: string;
-
-    name: string;
-
-    parameters: unknown;
-  }
-}
-
-/**
- * Response from AI.
- */
-export interface AdvisorSendMessageResponse {
-  sessionId: string;
-
-  functionCalls?: Array<AdvisorSendMessageResponse.FunctionCall> | null;
-
-  proactiveInsights?: Array<AIInsight> | null;
-
-  requiresUserAction?: boolean;
-
-  text?: string | null;
-}
-
-export namespace AdvisorSendMessageResponse {
-  export interface FunctionCall {
-    id?: string;
-
-    args?: unknown;
-
-    name?: string;
-  }
-}
+export type AdvisorSendMessageResponse = unknown;
 
 export interface AdvisorListToolsParams {
   /**
-   * Cursor for the next page of results.
-   */
-  after?: string;
-
-  /**
-   * Maximum number of items to return.
+   * Maximum number of items to return in a single page.
    */
   limit?: number;
+
+  /**
+   * Number of items to skip before starting to collect the result set.
+   */
+  offset?: number;
 }
 
 export interface AdvisorSendMessageParams {
-  functionResponse?: AdvisorSendMessageParams.FunctionResponse | null;
-
-  message?: string;
-
-  sessionId?: string | null;
-}
-
-export namespace AdvisorSendMessageParams {
-  export interface FunctionResponse {
-    name?: string;
-
-    response?: unknown;
-  }
+  /**
+   * Optional: The output from a tool function that the AI previously requested to be
+   * executed.
+   */
+  functionResponse?: unknown;
 }
 
 export declare namespace Advisor {
   export {
-    type AIInsight as AIInsight,
     type AdvisorListToolsResponse as AdvisorListToolsResponse,
     type AdvisorSendMessageResponse as AdvisorSendMessageResponse,
     type AdvisorListToolsParams as AdvisorListToolsParams,

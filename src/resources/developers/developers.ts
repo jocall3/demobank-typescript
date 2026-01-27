@@ -2,14 +2,7 @@
 
 import { APIResource } from '../../core/resource';
 import * as WebhooksAPI from './webhooks';
-import {
-  WebhookCreateParams,
-  WebhookListParams,
-  WebhookListResponse,
-  WebhookSubscription,
-  WebhookUpdateParams,
-  Webhooks,
-} from './webhooks';
+import { Webhooks } from './webhooks';
 
 export class Developers extends APIResource {
   webhooks: WebhooksAPI.Webhooks = new WebhooksAPI.Webhooks(this._client);
@@ -18,12 +11,5 @@ export class Developers extends APIResource {
 Developers.Webhooks = Webhooks;
 
 export declare namespace Developers {
-  export {
-    Webhooks as Webhooks,
-    type WebhookSubscription as WebhookSubscription,
-    type WebhookListResponse as WebhookListResponse,
-    type WebhookCreateParams as WebhookCreateParams,
-    type WebhookUpdateParams as WebhookUpdateParams,
-    type WebhookListParams as WebhookListParams,
-  };
+  export { Webhooks as Webhooks };
 }

@@ -2,7 +2,7 @@
 
 import { APIResource } from '../../../core/resource';
 import * as CashFlowAPI from './cash-flow';
-import { CashFlow } from './cash-flow';
+import { CashFlow, CashFlowGetForecastParams, CashFlowGetForecastResponse } from './cash-flow';
 
 export class Treasury extends APIResource {
   cashFlow: CashFlowAPI.CashFlow = new CashFlowAPI.CashFlow(this._client);
@@ -11,5 +11,9 @@ export class Treasury extends APIResource {
 Treasury.CashFlow = CashFlow;
 
 export declare namespace Treasury {
-  export { CashFlow as CashFlow };
+  export {
+    CashFlow as CashFlow,
+    type CashFlowGetForecastResponse as CashFlowGetForecastResponse,
+    type CashFlowGetForecastParams as CashFlowGetForecastParams,
+  };
 }

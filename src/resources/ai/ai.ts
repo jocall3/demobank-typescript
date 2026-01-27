@@ -3,7 +3,6 @@
 import { APIResource } from '../../core/resource';
 import * as AdvisorAPI from './advisor';
 import {
-  AIInsight,
   Advisor,
   AdvisorListToolsParams,
   AdvisorListToolsResponse,
@@ -32,7 +31,6 @@ AI.Ads = Ads;
 export declare namespace AI {
   export {
     Advisor as Advisor,
-    type AIInsight as AIInsight,
     type AdvisorListToolsResponse as AdvisorListToolsResponse,
     type AdvisorSendMessageResponse as AdvisorSendMessageResponse,
     type AdvisorListToolsParams as AdvisorListToolsParams,
