@@ -6,32 +6,131 @@ import { RequestOptions } from '../../../internal/request-options';
 
 export class Preferences extends APIResource {
   /**
-   * Retrieves the user's application preferences, including UI theme, notification
-   * settings, and AI interaction modes.
+   * Retrieves the user's deep personalization preferences, including AI
+   * customization settings, notification channel priorities, thematic choices, and
+   * data sharing consents.
+   *
+   * @example
+   * ```ts
+   * const preference =
+   *   await client.users.me.preferences.retrieve();
+   * ```
    */
-  retrieve(options?: RequestOptions): APIPromise<UserPreferences> {
+  retrieve(options?: RequestOptions): APIPromise<PreferenceRetrieveResponse> {
     return this._client.get('/users/me/preferences', options);
+  }
+
+  /**
+   * Updates the user's deep personalization preferences, allowing dynamic control
+   * over AI behavior, notification delivery, thematic choices, and data privacy
+   * settings.
+   *
+   * @example
+   * ```ts
+   * const preference = await client.users.me.preferences.update(
+   *   { aiInteractionMode: 'proactive', theme: 'Dark-Quantum' },
+   * );
+   * ```
+   */
+  update(
+    body: PreferenceUpdateParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<PreferenceUpdateResponse> {
+    return this._client.put('/users/me/preferences', { body, ...options });
   }
 }
 
 /**
- * User configuration settings.
+ * User's personalized preferences for the platform.
  */
-export interface UserPreferences {
-  aiInteractionMode?: 'proactive' | 'balanced' | 'on_demand';
+export interface PreferenceRetrieveResponse {
+  aiInteractionMode?: string;
 
   dataSharingConsent?: boolean;
 
-  notificationChannels?: UserPreferences.NotificationChannels;
+  /**
+   * Preferred channels for receiving notifications.
+   */
+  notificationChannels?: PreferenceRetrieveResponse.NotificationChannels;
 
   preferredLanguage?: string;
 
   theme?: string;
 
-  transactionGrouping?: 'category' | 'merchant' | 'date' | 'account';
+  transactionGrouping?: string;
 }
 
-export namespace UserPreferences {
+export namespace PreferenceRetrieveResponse {
+  /**
+   * Preferred channels for receiving notifications.
+   */
+  export interface NotificationChannels {
+    email?: boolean;
+
+    inApp?: boolean;
+
+    push?: boolean;
+
+    sms?: boolean;
+  }
+}
+
+/**
+ * User's personalized preferences for the platform.
+ */
+export interface PreferenceUpdateResponse {
+  aiInteractionMode?: string;
+
+  dataSharingConsent?: boolean;
+
+  /**
+   * Preferred channels for receiving notifications.
+   */
+  notificationChannels?: PreferenceUpdateResponse.NotificationChannels;
+
+  preferredLanguage?: string;
+
+  theme?: string;
+
+  transactionGrouping?: string;
+}
+
+export namespace PreferenceUpdateResponse {
+  /**
+   * Preferred channels for receiving notifications.
+   */
+  export interface NotificationChannels {
+    email?: boolean;
+
+    inApp?: boolean;
+
+    push?: boolean;
+
+    sms?: boolean;
+  }
+}
+
+export interface PreferenceUpdateParams {
+  aiInteractionMode?: string;
+
+  dataSharingConsent?: boolean;
+
+  /**
+   * Preferred channels for receiving notifications.
+   */
+  notificationChannels?: PreferenceUpdateParams.NotificationChannels;
+
+  preferredLanguage?: string;
+
+  theme?: string;
+
+  transactionGrouping?: string;
+}
+
+export namespace PreferenceUpdateParams {
+  /**
+   * Preferred channels for receiving notifications.
+   */
   export interface NotificationChannels {
     email?: boolean;
 
@@ -44,5 +143,9 @@ export namespace UserPreferences {
 }
 
 export declare namespace Preferences {
-  export { type UserPreferences as UserPreferences };
+  export {
+    type PreferenceRetrieveResponse as PreferenceRetrieveResponse,
+    type PreferenceUpdateResponse as PreferenceUpdateResponse,
+    type PreferenceUpdateParams as PreferenceUpdateParams,
+  };
 }

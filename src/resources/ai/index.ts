@@ -4,7 +4,6 @@ export { AI } from './ai';
 export { Ads, type AdGetGenerationStatusResponse } from './ads/index';
 export {
   Advisor,
-  type AIInsight,
   type AdvisorListToolsResponse,
   type AdvisorSendMessageResponse,
   type AdvisorListToolsParams,

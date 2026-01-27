@@ -16,13 +16,18 @@ import * as Errors from './core/error';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
-import { AccountLinkParams, AccountLinkResponse, Accounts, LinkedAccount } from './resources/accounts';
 import {
-  Transaction,
-  TransactionDisputeParams,
-  TransactionDisputeResponse,
+  AccountLinkParams,
+  AccountLinkResponse,
+  AccountRetrieveDetailsResponse,
+  Accounts,
+} from './resources/accounts';
+import {
+  TransactionCategorizeParams,
+  TransactionCategorizeResponse,
   TransactionListParams,
   TransactionListResponse,
+  TransactionRetrieveResponse,
   Transactions,
 } from './resources/transactions';
 import { AI } from './resources/ai/ai';
@@ -228,23 +233,7 @@ export class Demobank {
   }
 
   protected validateHeaders({ values, nulls }: NullableHeaders) {
-    if (this.apiKey && values.get('x-api-key')) {
-      return;
-    }
-    if (nulls.has('x-api-key')) {
-      return;
-    }
-
-    throw new Error(
-      'Could not resolve authentication method. Expected the apiKey to be set. Or for the "X-API-Key" headers to be explicitly omitted',
-    );
-  }
-
-  protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    if (this.apiKey == null) {
-      return undefined;
-    }
-    return buildHeaders([{ 'X-API-Key': this.apiKey }]);
+    return;
   }
 
   /**
@@ -684,7 +673,6 @@ export class Demobank {
         ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
         ...getPlatformHeaders(),
       },
-      await this.authHeaders(options),
       this._options.defaultHeaders,
       bodyHeaders,
       options.headers,
@@ -783,18 +771,18 @@ export declare namespace Demobank {
 
   export {
     Accounts as Accounts,
-    type LinkedAccount as LinkedAccount,
     type AccountLinkResponse as AccountLinkResponse,
+    type AccountRetrieveDetailsResponse as AccountRetrieveDetailsResponse,
     type AccountLinkParams as AccountLinkParams,
   };
 
   export {
     Transactions as Transactions,
-    type Transaction as Transaction,
+    type TransactionRetrieveResponse as TransactionRetrieveResponse,
     type TransactionListResponse as TransactionListResponse,
-    type TransactionDisputeResponse as TransactionDisputeResponse,
+    type TransactionCategorizeResponse as TransactionCategorizeResponse,
     type TransactionListParams as TransactionListParams,
-    type TransactionDisputeParams as TransactionDisputeParams,
+    type TransactionCategorizeParams as TransactionCategorizeParams,
   };
 
   export { AI as AI };

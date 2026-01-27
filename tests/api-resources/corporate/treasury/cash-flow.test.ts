@@ -4,10 +4,10 @@ import Demobank from 'demobank';
 
 const client = new Demobank({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
-describe('resource simulate', () => {
+describe('resource cashFlow', () => {
   // Prism tests are disabled
-  test.skip('run', async () => {
-    const responsePromise = client.ai.oracle.simulate.run({});
+  test.skip('getForecast', async () => {
+    const responsePromise = client.corporate.treasury.cashFlow.getForecast();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -18,14 +18,13 @@ describe('resource simulate', () => {
   });
 
   // Prism tests are disabled
-  test.skip('runAdvanced', async () => {
-    const responsePromise = client.ai.oracle.simulate.runAdvanced({});
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
+  test.skip('getForecast: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.corporate.treasury.cashFlow.getForecast(
+        { forecastHorizonDays: 0, includeScenarioAnalysis: true },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Demobank.NotFoundError);
   });
 });

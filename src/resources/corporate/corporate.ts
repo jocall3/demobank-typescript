@@ -7,16 +7,19 @@ import {
   AnomalyListParams,
   AnomalyListResponse,
   AnomalyUpdateStatusParams,
-  FinancialAnomaly,
+  AnomalyUpdateStatusResponse,
 } from './anomalies';
 import * as CardsAPI from './cards';
 import {
+  CardFreezeParams,
+  CardFreezeResponse,
   CardIssueVirtualParams,
+  CardIssueVirtualResponse,
   CardListParams,
   CardListResponse,
+  CardUpdateControlsParams,
+  CardUpdateControlsResponse,
   Cards,
-  CorporateCard,
-  CorporateCardControls,
 } from './cards';
 import * as ComplianceAPI from './compliance';
 import { Compliance, ComplianceRequestAuditParams, ComplianceRequestAuditResponse } from './compliance';
@@ -42,17 +45,20 @@ Corporate.Risk = Risk;
 export declare namespace Corporate {
   export {
     Cards as Cards,
-    type CorporateCard as CorporateCard,
-    type CorporateCardControls as CorporateCardControls,
     type CardListResponse as CardListResponse,
+    type CardFreezeResponse as CardFreezeResponse,
+    type CardIssueVirtualResponse as CardIssueVirtualResponse,
+    type CardUpdateControlsResponse as CardUpdateControlsResponse,
     type CardListParams as CardListParams,
+    type CardFreezeParams as CardFreezeParams,
     type CardIssueVirtualParams as CardIssueVirtualParams,
+    type CardUpdateControlsParams as CardUpdateControlsParams,
   };
 
   export {
     Anomalies as Anomalies,
-    type FinancialAnomaly as FinancialAnomaly,
     type AnomalyListResponse as AnomalyListResponse,
+    type AnomalyUpdateStatusResponse as AnomalyUpdateStatusResponse,
     type AnomalyListParams as AnomalyListParams,
     type AnomalyUpdateStatusParams as AnomalyUpdateStatusParams,
   };

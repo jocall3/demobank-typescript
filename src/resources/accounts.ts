@@ -3,21 +3,54 @@
 import { APIResource } from '../core/resource';
 import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
+import { path } from '../internal/utils/path';
 
 export class Accounts extends APIResource {
   /**
-   * Initiates the process to link an external financial institution via Open Banking
-   * protocols.
+   * Begins the secure process of linking a new external financial institution (e.g.,
+   * another bank, investment platform) to the user's profile, typically involving a
+   * third-party tokenized flow.
+   *
+   * @example
+   * ```ts
+   * const response = await client.accounts.link({
+   *   countryCode: 'US',
+   *   institutionName: 'Bank of America',
+   * });
+   * ```
    */
   link(body: AccountLinkParams, options?: RequestOptions): APIPromise<AccountLinkResponse> {
     return this._client.post('/accounts/link', { body, ...options });
   }
+
+  /**
+   * Retrieves comprehensive analytics for a specific financial account, including
+   * historical balance trends, projected cash flow, and AI-driven insights into
+   * spending patterns.
+   *
+   * @example
+   * ```ts
+   * const response = await client.accounts.retrieveDetails(
+   *   'acc_chase_checking_4567',
+   * );
+   * ```
+   */
+  retrieveDetails(accountID: string, options?: RequestOptions): APIPromise<AccountRetrieveDetailsResponse> {
+    return this._client.get(path`/accounts/${accountID}/details`, options);
+  }
 }
 
-/**
- * Represents a linked financial account.
- */
-export interface LinkedAccount {
+export interface AccountLinkResponse {
+  authUri: string;
+
+  linkSessionId: string;
+
+  status: string;
+
+  message?: string;
+}
+
+export interface AccountRetrieveDetailsResponse {
   id: string;
 
   currency: string;
@@ -30,44 +63,55 @@ export interface LinkedAccount {
 
   name: string;
 
-  type: 'depository' | 'credit' | 'loan' | 'investment' | 'other';
+  type: string;
 
-  availableBalance?: number | null;
+  accountHolder?: string;
 
-  externalId?: string | null;
+  availableBalance?: number;
 
-  mask?: string | null;
+  balanceHistory?: Array<AccountRetrieveDetailsResponse.BalanceHistory>;
 
-  subtype?: string | null;
+  externalId?: string;
+
+  interestRate?: number;
+
+  mask?: string;
+
+  openedDate?: string;
+
+  projectedCashFlow?: AccountRetrieveDetailsResponse.ProjectedCashFlow;
+
+  subtype?: string;
+
+  transactionsCount?: number;
 }
 
-/**
- * Response for account linking.
- */
-export interface AccountLinkResponse {
-  authUri: string;
+export namespace AccountRetrieveDetailsResponse {
+  export interface BalanceHistory {
+    balance?: number;
 
-  linkSessionId: string;
+    date?: string;
+  }
 
-  status: 'pending_user_action' | 'completed' | 'failed';
+  export interface ProjectedCashFlow {
+    confidenceScore?: number;
 
-  message?: string | null;
+    days30?: number;
+
+    days90?: number;
+  }
 }
 
 export interface AccountLinkParams {
   countryCode: string;
 
   institutionName: string;
-
-  providerIdentifier?: string | null;
-
-  redirectUri?: string | null;
 }
 
 export declare namespace Accounts {
   export {
-    type LinkedAccount as LinkedAccount,
     type AccountLinkResponse as AccountLinkResponse,
+    type AccountRetrieveDetailsResponse as AccountRetrieveDetailsResponse,
     type AccountLinkParams as AccountLinkParams,
   };
 }

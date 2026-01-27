@@ -6,33 +6,24 @@ import { RequestOptions } from '../../internal/request-options';
 
 export class Compliance extends APIResource {
   /**
-   * Initiates a comprehensive compliance audit for a specified scope and period.
+   * Initiates an AI-powered compliance audit for a specific period or scope,
+   * generating a comprehensive report detailing adherence to regulatory frameworks,
+   * internal policies, and flagging potential risks.
+   *
+   * @example
+   * ```ts
+   * const response =
+   *   await client.corporate.compliance.requestAudit();
+   * ```
    */
-  requestAudit(
-    body: ComplianceRequestAuditParams,
-    options?: RequestOptions,
-  ): APIPromise<ComplianceRequestAuditResponse> {
+  requestAudit(body: ComplianceRequestAuditParams, options?: RequestOptions): APIPromise<unknown> {
     return this._client.post('/corporate/compliance/audits', { body, ...options });
   }
 }
 
-export interface ComplianceRequestAuditResponse {
-  auditId?: string;
+export type ComplianceRequestAuditResponse = unknown;
 
-  status?: 'initiated' | 'processing' | 'completed' | 'failed';
-}
-
-export interface ComplianceRequestAuditParams {
-  auditScope: 'all_transactions' | 'specific_accounts' | 'specific_cards' | 'all_users';
-
-  endDate: string;
-
-  regulatoryFrameworks: Array<'AML' | 'KYC' | 'PCI-DSS' | 'GDPR' | 'CCPA' | 'SOX' | 'OFAC'>;
-
-  startDate: string;
-
-  additionalContext?: string | null;
-}
+export interface ComplianceRequestAuditParams {}
 
 export declare namespace Compliance {
   export {

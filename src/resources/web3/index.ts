@@ -2,8 +2,8 @@
 
 export {
   Wallets,
-  type CryptoWalletConnection,
   type WalletListResponse,
+  type WalletConnectResponse,
   type WalletListParams,
   type WalletConnectParams,
 } from './wallets';

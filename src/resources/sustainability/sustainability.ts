@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as AdvisorAPI from '../ai/advisor';
 import * as InvestmentsAPI from './investments';
 import { InvestmentAnalyzeImpactResponse, Investments } from './investments';
 import { APIPromise } from '../../core/api-promise';
@@ -11,51 +10,16 @@ export class Sustainability extends APIResource {
   investments: InvestmentsAPI.Investments = new InvestmentsAPI.Investments(this._client);
 
   /**
-   * Calculates the user's carbon footprint based on transaction history.
+   * Generates a detailed report of the user's estimated carbon footprint based on
+   * transaction data, lifestyle choices, and AI-driven impact assessments, offering
+   * insights and reduction strategies.
    */
-  retrieveCarbonFootprint(
-    options?: RequestOptions,
-  ): APIPromise<SustainabilityRetrieveCarbonFootprintResponse> {
+  retrieveCarbonFootprint(options?: RequestOptions): APIPromise<unknown> {
     return this._client.get('/sustainability/carbon-footprint', options);
   }
 }
 
-/**
- * Carbon footprint report.
- */
-export interface SustainabilityRetrieveCarbonFootprintResponse {
-  aiInsights: Array<AdvisorAPI.AIInsight>;
-
-  breakdownByCategory: Array<SustainabilityRetrieveCarbonFootprintResponse.BreakdownByCategory>;
-
-  period: string;
-
-  reportId: string;
-
-  totalCarbonFootprintKgCO2e: number;
-
-  offsetRecommendations?: Array<SustainabilityRetrieveCarbonFootprintResponse.OffsetRecommendation> | null;
-}
-
-export namespace SustainabilityRetrieveCarbonFootprintResponse {
-  export interface BreakdownByCategory {
-    carbonFootprintKgCO2e?: number;
-
-    category?: string;
-
-    percentage?: number;
-  }
-
-  export interface OffsetRecommendation {
-    costPerTonUSD?: number;
-
-    offsetAmountKgCO2e?: number;
-
-    project?: string;
-
-    totalCostUSD?: number;
-  }
-}
+export type SustainabilityRetrieveCarbonFootprintResponse = unknown;
 
 Sustainability.Investments = Investments;
 

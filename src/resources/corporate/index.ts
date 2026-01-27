@@ -2,18 +2,21 @@
 
 export {
   Anomalies,
-  type FinancialAnomaly,
   type AnomalyListResponse,
+  type AnomalyUpdateStatusResponse,
   type AnomalyListParams,
   type AnomalyUpdateStatusParams,
 } from './anomalies';
 export {
   Cards,
-  type CorporateCard,
-  type CorporateCardControls,
   type CardListResponse,
+  type CardFreezeResponse,
+  type CardIssueVirtualResponse,
+  type CardUpdateControlsResponse,
   type CardListParams,
+  type CardFreezeParams,
   type CardIssueVirtualParams,
+  type CardUpdateControlsParams,
 } from './cards';
 export {
   Compliance,

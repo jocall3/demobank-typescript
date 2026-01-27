@@ -2,9 +2,14 @@
 
 import { APIResource } from '../../../core/resource';
 import * as DevicesAPI from './devices';
-import { Device, DeviceListParams, DeviceListResponse, DeviceRegisterParams, Devices } from './devices';
+import { DeviceListParams, DeviceListResponse, Devices } from './devices';
 import * as PreferencesAPI from './preferences';
-import { Preferences, UserPreferences } from './preferences';
+import {
+  PreferenceRetrieveResponse,
+  PreferenceUpdateParams,
+  PreferenceUpdateResponse,
+  Preferences as PreferencesAPIPreferences,
+} from './preferences';
 import { APIPromise } from '../../../core/api-promise';
 import { RequestOptions } from '../../../internal/request-options';
 
@@ -13,43 +18,34 @@ export class Me extends APIResource {
   devices: DevicesAPI.Devices = new DevicesAPI.Devices(this._client);
 
   /**
-   * Fetches the full profile of the currently authenticated user, including identity
-   * verification status and loyalty details.
+   * Fetches the complete and dynamically updated profile information for the
+   * currently authenticated user, encompassing personal details, security status,
+   * gamification level, loyalty points, and linked identity attributes.
+   *
+   * @example
+   * ```ts
+   * const me = await client.users.me.retrieve();
+   * ```
    */
   retrieve(options?: RequestOptions): APIPromise<MeRetrieveResponse> {
     return this._client.get('/users/me', options);
   }
 }
 
-/**
- * Represents a registered user.
- */
 export interface MeRetrieveResponse {
-  /**
-   * Unique user ID.
-   */
   id: string;
 
-  /**
-   * Email address.
-   */
   email: string;
 
   identityVerified: boolean;
 
-  /**
-   * Full name.
-   */
   name: string;
 
-  /**
-   * Physical address structure.
-   */
   address?: MeRetrieveResponse.Address;
 
   aiPersona?: string;
 
-  dateOfBirth?: string | null;
+  dateOfBirth?: string;
 
   gamificationLevel?: number;
 
@@ -57,23 +53,20 @@ export interface MeRetrieveResponse {
 
   loyaltyTier?: string;
 
-  phone?: string | null;
+  phone?: string;
 
   /**
-   * User configuration settings.
+   * User's personalized preferences for the platform.
    */
-  preferences?: PreferencesAPI.UserPreferences;
+  preferences?: MeRetrieveResponse.Preferences;
 
   /**
-   * Security state of the user account.
+   * Security-related status for the user account.
    */
   securityStatus?: MeRetrieveResponse.SecurityStatus;
 }
 
 export namespace MeRetrieveResponse {
-  /**
-   * Physical address structure.
-   */
   export interface Address {
     city?: string;
 
@@ -87,7 +80,42 @@ export namespace MeRetrieveResponse {
   }
 
   /**
-   * Security state of the user account.
+   * User's personalized preferences for the platform.
+   */
+  export interface Preferences {
+    aiInteractionMode?: string;
+
+    dataSharingConsent?: boolean;
+
+    /**
+     * Preferred channels for receiving notifications.
+     */
+    notificationChannels?: Preferences.NotificationChannels;
+
+    preferredLanguage?: string;
+
+    theme?: string;
+
+    transactionGrouping?: string;
+  }
+
+  export namespace Preferences {
+    /**
+     * Preferred channels for receiving notifications.
+     */
+    export interface NotificationChannels {
+      email?: boolean;
+
+      inApp?: boolean;
+
+      push?: boolean;
+
+      sms?: boolean;
+    }
+  }
+
+  /**
+   * Security-related status for the user account.
    */
   export interface SecurityStatus {
     biometricsEnrolled?: boolean;
@@ -100,19 +128,22 @@ export namespace MeRetrieveResponse {
   }
 }
 
-Me.Preferences = Preferences;
+Me.Preferences = PreferencesAPIPreferences;
 Me.Devices = Devices;
 
 export declare namespace Me {
   export { type MeRetrieveResponse as MeRetrieveResponse };
 
-  export { Preferences as Preferences, type UserPreferences as UserPreferences };
+  export {
+    PreferencesAPIPreferences as Preferences,
+    type PreferenceRetrieveResponse as PreferenceRetrieveResponse,
+    type PreferenceUpdateResponse as PreferenceUpdateResponse,
+    type PreferenceUpdateParams as PreferenceUpdateParams,
+  };
 
   export {
     Devices as Devices,
-    type Device as Device,
     type DeviceListResponse as DeviceListResponse,
     type DeviceListParams as DeviceListParams,
-    type DeviceRegisterParams as DeviceRegisterParams,
   };
 }

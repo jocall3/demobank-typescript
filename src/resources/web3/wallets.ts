@@ -6,86 +6,56 @@ import { RequestOptions } from '../../internal/request-options';
 
 export class Wallets extends APIResource {
   /**
-   * Lists all connected cryptocurrency wallets.
+   * Retrieves a list of all securely linked cryptocurrency wallets (e.g., MetaMask,
+   * Ledger integration), showing their addresses, associated networks, and
+   * verification status.
+   *
+   * @example
+   * ```ts
+   * const wallets = await client.web3.wallets.list();
+   * ```
    */
-  list(
-    query: WalletListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<WalletListResponse> {
+  list(query: WalletListParams | null | undefined = {}, options?: RequestOptions): APIPromise<unknown> {
     return this._client.get('/web3/wallets', { query, ...options });
   }
 
   /**
-   * Connects a new crypto wallet using a signed message for verification.
+   * Initiates the process to securely connect a new cryptocurrency wallet to the
+   * user's profile, typically involving a signed message or OAuth flow from the
+   * wallet provider.
+   *
+   * @example
+   * ```ts
+   * const response = await client.web3.wallets.connect();
+   * ```
    */
-  connect(body: WalletConnectParams, options?: RequestOptions): APIPromise<CryptoWalletConnection> {
+  connect(body: WalletConnectParams, options?: RequestOptions): APIPromise<unknown> {
     return this._client.post('/web3/wallets', { body, ...options });
   }
 }
 
-/**
- * Connected crypto wallet.
- */
-export interface CryptoWalletConnection {
-  id: string;
+export type WalletListResponse = unknown;
 
-  blockchainNetwork: string;
-
-  lastSynced: string;
-
-  readAccessGranted: boolean;
-
-  status: 'connected' | 'disconnected' | 'pending_verification' | 'error';
-
-  walletAddress: string;
-
-  walletProvider: string;
-
-  writeAccessGranted: boolean;
-}
-
-export interface WalletListResponse {
-  /**
-   * Indicates if there are more pages available.
-   */
-  hasNextPage: boolean;
-
-  data?: Array<CryptoWalletConnection>;
-
-  /**
-   * Cursor to use for the next page request.
-   */
-  endCursor?: string | null;
-}
+export type WalletConnectResponse = unknown;
 
 export interface WalletListParams {
   /**
-   * Cursor for the next page of results.
-   */
-  after?: string;
-
-  /**
-   * Maximum number of items to return.
+   * Maximum number of items to return in a single page.
    */
   limit?: number;
+
+  /**
+   * Number of items to skip before starting to collect the result set.
+   */
+  offset?: number;
 }
 
-export interface WalletConnectParams {
-  blockchainNetwork: string;
-
-  signedMessage: string;
-
-  walletAddress: string;
-
-  walletProvider: string;
-
-  requestWriteAccess?: boolean;
-}
+export interface WalletConnectParams {}
 
 export declare namespace Wallets {
   export {
-    type CryptoWalletConnection as CryptoWalletConnection,
     type WalletListResponse as WalletListResponse,
+    type WalletConnectResponse as WalletConnectResponse,
     type WalletListParams as WalletListParams,
     type WalletConnectParams as WalletConnectParams,
   };
