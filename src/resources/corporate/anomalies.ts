@@ -7,119 +7,88 @@ import { path } from '../../internal/utils/path';
 
 export class Anomalies extends APIResource {
   /**
-   * Lists detected financial anomalies based on AI risk models.
+   * Retrieves a comprehensive list of AI-detected financial anomalies across
+   * transactions, payments, and corporate cards that require immediate review and
+   * potential action to mitigate risk and ensure compliance.
+   *
+   * @example
+   * ```ts
+   * const anomalies = await client.corporate.anomalies.list();
+   * ```
    */
-  list(
-    query: AnomalyListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<AnomalyListResponse> {
+  list(query: AnomalyListParams | null | undefined = {}, options?: RequestOptions): APIPromise<unknown> {
     return this._client.get('/corporate/anomalies', { query, ...options });
   }
 
   /**
-   * Updates the status of a detected anomaly (e.g., dismiss or resolve).
+   * Updates the review status of a specific financial anomaly, allowing compliance
+   * officers to mark it as dismissed, resolved, or escalate for further
+   * investigation after thorough AI-assisted and human review.
+   *
+   * @example
+   * ```ts
+   * const response =
+   *   await client.corporate.anomalies.updateStatus(
+   *     'anom_risk-2024-07-21-D1E2F3',
+   *   );
+   * ```
    */
   updateStatus(
     anomalyID: string,
     body: AnomalyUpdateStatusParams,
     options?: RequestOptions,
-  ): APIPromise<FinancialAnomaly> {
+  ): APIPromise<unknown> {
     return this._client.put(path`/corporate/anomalies/${anomalyID}/status`, { body, ...options });
   }
 }
 
-/**
- * Detected financial anomaly.
- */
-export interface FinancialAnomaly {
-  id: string;
+export type AnomalyListResponse = unknown;
 
-  aiConfidenceScore: number;
-
-  description: string;
-
-  entityId: string;
-
-  entityType: 'payment_order' | 'transaction' | 'counterparty' | 'corporate_card' | 'user' | 'invoice';
-
-  recommendedAction: string | null;
-
-  riskScore: number;
-
-  severity: 'low' | 'medium' | 'high' | 'critical';
-
-  status: 'new' | 'under_review' | 'escalated' | 'dismissed' | 'resolved';
-
-  timestamp: string;
-
-  details?: string | null;
-
-  relatedTransactions?: Array<string> | null;
-
-  resolutionNotes?: string | null;
-}
-
-export interface AnomalyListResponse {
-  /**
-   * Indicates if there are more pages available.
-   */
-  hasNextPage: boolean;
-
-  data?: Array<FinancialAnomaly>;
-
-  /**
-   * Cursor to use for the next page request.
-   */
-  endCursor?: string | null;
-}
+export type AnomalyUpdateStatusResponse = unknown;
 
 export interface AnomalyListParams {
   /**
-   * Cursor for the next page of results.
-   */
-  after?: string;
-
-  /**
-   * End date for filtering.
+   * End date for filtering results (inclusive, YYYY-MM-DD).
    */
   endDate?: string;
 
   /**
-   * Filter by entity type.
+   * Filter anomalies by the type of financial entity they are related to.
    */
-  entityType?: 'payment_order' | 'transaction' | 'counterparty' | 'corporate_card' | 'invoice';
+  entityType?: string;
 
   /**
-   * Maximum number of items to return.
+   * Maximum number of items to return in a single page.
    */
   limit?: number;
 
   /**
-   * Filter by severity.
+   * Number of items to skip before starting to collect the result set.
    */
-  severity?: 'low' | 'medium' | 'high' | 'critical';
+  offset?: number;
 
   /**
-   * Start date for filtering.
+   * Filter anomalies by their AI-assessed severity level.
+   */
+  severity?: string;
+
+  /**
+   * Start date for filtering results (inclusive, YYYY-MM-DD).
    */
   startDate?: string;
 
   /**
-   * Filter by anomaly status.
+   * Filter anomalies by their current review status.
    */
-  status?: 'new' | 'under_review' | 'escalated' | 'dismissed' | 'resolved';
+  status?: string;
 }
 
-export interface AnomalyUpdateStatusParams {
-  status: 'dismissed' | 'resolved' | 'under_review' | 'escalated';
-
-  resolutionNotes?: string | null;
-}
+export interface AnomalyUpdateStatusParams {}
 
 export declare namespace Anomalies {
   export {
-    type FinancialAnomaly as FinancialAnomaly,
     type AnomalyListResponse as AnomalyListResponse,
+    type AnomalyUpdateStatusResponse as AnomalyUpdateStatusResponse,
     type AnomalyListParams as AnomalyListParams,
     type AnomalyUpdateStatusParams as AnomalyUpdateStatusParams,
   };

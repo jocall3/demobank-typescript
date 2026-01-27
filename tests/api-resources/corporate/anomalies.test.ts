@@ -2,10 +2,7 @@
 
 import Demobank from 'demobank';
 
-const client = new Demobank({
-  apiKey: 'My API Key',
-  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-});
+const client = new Demobank({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
 describe('resource anomalies', () => {
   // Prism tests are disabled
@@ -26,13 +23,13 @@ describe('resource anomalies', () => {
     await expect(
       client.corporate.anomalies.list(
         {
-          after: 'after',
-          endDate: '2019-12-27',
-          entityType: 'payment_order',
-          limit: 1,
-          severity: 'low',
-          startDate: '2019-12-27',
-          status: 'new',
+          endDate: 'endDate',
+          entityType: 'entityType',
+          limit: 0,
+          offset: 0,
+          severity: 'severity',
+          startDate: 'startDate',
+          status: 'status',
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -40,8 +37,8 @@ describe('resource anomalies', () => {
   });
 
   // Prism tests are disabled
-  test.skip('updateStatus: only required params', async () => {
-    const responsePromise = client.corporate.anomalies.updateStatus('anomalyId', { status: 'dismissed' });
+  test.skip('updateStatus', async () => {
+    const responsePromise = client.corporate.anomalies.updateStatus('anom_risk-2024-07-21-D1E2F3', {});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -49,13 +46,5 @@ describe('resource anomalies', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  // Prism tests are disabled
-  test.skip('updateStatus: required and optional params', async () => {
-    const response = await client.corporate.anomalies.updateStatus('anomalyId', {
-      status: 'dismissed',
-      resolutionNotes: 'resolutionNotes',
-    });
   });
 });

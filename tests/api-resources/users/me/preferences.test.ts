@@ -2,10 +2,7 @@
 
 import Demobank from 'demobank';
 
-const client = new Demobank({
-  apiKey: 'My API Key',
-  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-});
+const client = new Demobank({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
 describe('resource preferences', () => {
   // Prism tests are disabled
@@ -18,5 +15,40 @@ describe('resource preferences', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  // Prism tests are disabled
+  test.skip('update', async () => {
+    const responsePromise = client.users.me.preferences.update();
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  // Prism tests are disabled
+  test.skip('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.users.me.preferences.update(
+        {
+          aiInteractionMode: 'proactive',
+          dataSharingConsent: true,
+          notificationChannels: {
+            email: true,
+            inApp: true,
+            push: true,
+            sms: true,
+          },
+          preferredLanguage: 'preferredLanguage',
+          theme: 'Dark-Quantum',
+          transactionGrouping: 'transactionGrouping',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Demobank.NotFoundError);
   });
 });

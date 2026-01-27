@@ -2,7 +2,7 @@
 
 import { APIResource } from '../../../../core/resource';
 import * as RulesAPI from './rules';
-import { FraudRule, RuleCreateParams, RuleListParams, RuleListResponse, Rules } from './rules';
+import { RuleListParams, RuleListResponse, Rules } from './rules';
 
 export class Fraud extends APIResource {
   rules: RulesAPI.Rules = new RulesAPI.Rules(this._client);
@@ -11,11 +11,5 @@ export class Fraud extends APIResource {
 Fraud.Rules = Rules;
 
 export declare namespace Fraud {
-  export {
-    Rules as Rules,
-    type FraudRule as FraudRule,
-    type RuleListResponse as RuleListResponse,
-    type RuleCreateParams as RuleCreateParams,
-    type RuleListParams as RuleListParams,
-  };
+  export { Rules as Rules, type RuleListResponse as RuleListResponse, type RuleListParams as RuleListParams };
 }

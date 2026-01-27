@@ -3,130 +3,142 @@
 import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Cards extends APIResource {
   /**
-   * Retrieves a list of all corporate cards issued to the organization.
+   * Retrieves a comprehensive list of all physical and virtual corporate cards
+   * associated with the user's organization, including their status, assigned
+   * holder, and current spending controls.
+   *
+   * @example
+   * ```ts
+   * const cards = await client.corporate.cards.list();
+   * ```
    */
-  list(
-    query: CardListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<CardListResponse> {
+  list(query: CardListParams | null | undefined = {}, options?: RequestOptions): APIPromise<unknown> {
     return this._client.get('/corporate/cards', { query, ...options });
   }
 
   /**
-   * Instantly issues a new virtual corporate card for immediate use.
+   * Immediately changes the frozen status of a corporate card, preventing or
+   * allowing transactions in real-time, critical for security and expense
+   * management.
+   *
+   * @example
+   * ```ts
+   * const response = await client.corporate.cards.freeze(
+   *   'corp_card_xyz987654',
+   * );
+   * ```
    */
-  issueVirtual(body: CardIssueVirtualParams, options?: RequestOptions): APIPromise<CorporateCard> {
+  freeze(cardID: string, body: CardFreezeParams, options?: RequestOptions): APIPromise<CardFreezeResponse> {
+    return this._client.post(path`/corporate/cards/${cardID}/freeze`, { body, ...options });
+  }
+
+  /**
+   * Creates and issues a new virtual corporate card with specified spending limits,
+   * merchant restrictions, and expiration dates, ideal for secure online purchases
+   * and temporary projects.
+   *
+   * @example
+   * ```ts
+   * const response = await client.corporate.cards.issueVirtual({
+   *   controls: {
+   *     atmWithdrawals: false,
+   *     contactlessPayments: false,
+   *     onlineTransactions: true,
+   *     internationalTransactions: false,
+   *     monthlyLimit: 1000,
+   *     dailyLimit: 500,
+   *     singleTransactionLimit: 200,
+   *     merchantCategoryRestrictions: ['Advertising'],
+   *     vendorRestrictions: ['Facebook Ads', 'Google Ads'],
+   *   },
+   * });
+   * ```
+   */
+  issueVirtual(body: CardIssueVirtualParams, options?: RequestOptions): APIPromise<CardIssueVirtualResponse> {
     return this._client.post('/corporate/cards/virtual', { body, ...options });
+  }
+
+  /**
+   * Updates the sophisticated spending controls, limits, and policy overrides for a
+   * specific corporate card, enabling real-time adjustments for security and budget
+   * adherence.
+   *
+   * @example
+   * ```ts
+   * const response =
+   *   await client.corporate.cards.updateControls(
+   *     'corp_card_xyz987654',
+   *   );
+   * ```
+   */
+  updateControls(
+    cardID: string,
+    body?: CardUpdateControlsParams | null | undefined,
+    options?: RequestOptions,
+  ): APIPromise<CardUpdateControlsResponse> {
+    return this._client.put(path`/corporate/cards/${cardID}/controls`, { body, ...options });
   }
 }
 
-/**
- * Represents a corporate card.
- */
-export interface CorporateCard {
-  id: string;
+export type CardListResponse = unknown;
 
-  cardNumberMask: string;
-
-  cardType: 'physical' | 'virtual';
-
+export interface CardFreezeResponse {
   /**
-   * Controls for corporate cards.
+   * Granular spending controls for a corporate card.
    */
-  controls: CorporateCardControls;
-
-  createdDate: string;
-
-  currency: string;
-
-  expirationDate: string;
-
-  frozen: boolean;
-
-  holderName: string;
-
-  status: 'active' | 'suspended' | 'deactivated' | 'pending_activation';
-
-  associatedEmployeeId?: string | null;
-
-  spendingPolicyId?: string | null;
+  controls: unknown;
 }
 
-/**
- * Controls for corporate cards.
- */
-export interface CorporateCardControls {
-  atmWithdrawals?: boolean;
-
-  contactlessPayments?: boolean;
-
-  dailyLimit?: number | null;
-
-  internationalTransactions?: boolean;
-
-  merchantCategoryRestrictions?: Array<string> | null;
-
-  monthlyLimit?: number | null;
-
-  onlineTransactions?: boolean;
-
-  singleTransactionLimit?: number | null;
-
-  vendorRestrictions?: Array<string> | null;
+export interface CardIssueVirtualResponse {
+  /**
+   * Granular spending controls for a corporate card.
+   */
+  controls: unknown;
 }
 
-export interface CardListResponse {
+export interface CardUpdateControlsResponse {
   /**
-   * Indicates if there are more pages available.
+   * Granular spending controls for a corporate card.
    */
-  hasNextPage: boolean;
-
-  data?: Array<CorporateCard>;
-
-  /**
-   * Cursor to use for the next page request.
-   */
-  endCursor?: string | null;
+  controls: unknown;
 }
 
 export interface CardListParams {
   /**
-   * Cursor for the next page of results.
-   */
-  after?: string;
-
-  /**
-   * Maximum number of items to return.
+   * Maximum number of items to return in a single page.
    */
   limit?: number;
+
+  /**
+   * Number of items to skip before starting to collect the result set.
+   */
+  offset?: number;
 }
+
+export interface CardFreezeParams {}
 
 export interface CardIssueVirtualParams {
   /**
-   * Controls for corporate cards.
+   * Granular spending controls for a corporate card.
    */
-  controls: CorporateCardControls;
-
-  expirationDate: string;
-
-  holderName: string;
-
-  purpose: string;
-
-  associatedEmployeeId?: string | null;
-
-  spendingPolicyId?: string | null;
+  controls: unknown;
 }
+
+export interface CardUpdateControlsParams {}
 
 export declare namespace Cards {
   export {
-    type CorporateCard as CorporateCard,
-    type CorporateCardControls as CorporateCardControls,
     type CardListResponse as CardListResponse,
+    type CardFreezeResponse as CardFreezeResponse,
+    type CardIssueVirtualResponse as CardIssueVirtualResponse,
+    type CardUpdateControlsResponse as CardUpdateControlsResponse,
     type CardListParams as CardListParams,
+    type CardFreezeParams as CardFreezeParams,
     type CardIssueVirtualParams as CardIssueVirtualParams,
+    type CardUpdateControlsParams as CardUpdateControlsParams,
   };
 }

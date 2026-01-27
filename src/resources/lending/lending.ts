@@ -2,7 +2,7 @@
 
 import { APIResource } from '../../core/resource';
 import * as ApplicationsAPI from './applications';
-import { ApplicationSubmitParams, Applications, LoanApplicationStatus } from './applications';
+import { Applications } from './applications';
 
 export class Lending extends APIResource {
   applications: ApplicationsAPI.Applications = new ApplicationsAPI.Applications(this._client);
@@ -11,9 +11,5 @@ export class Lending extends APIResource {
 Lending.Applications = Applications;
 
 export declare namespace Lending {
-  export {
-    Applications as Applications,
-    type LoanApplicationStatus as LoanApplicationStatus,
-    type ApplicationSubmitParams as ApplicationSubmitParams,
-  };
+  export { Applications as Applications };
 }

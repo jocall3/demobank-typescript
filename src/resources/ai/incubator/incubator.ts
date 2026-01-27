@@ -2,7 +2,7 @@
 
 import { APIResource } from '../../../core/resource';
 import * as PitchAPI from './pitch';
-import { Pitch, PitchSubmitParams, QuantumWeaverState } from './pitch';
+import { Pitch, PitchGetDetailsResponse, PitchSubmitParams, PitchSubmitResponse } from './pitch';
 
 export class Incubator extends APIResource {
   pitch: PitchAPI.Pitch = new PitchAPI.Pitch(this._client);
@@ -13,7 +13,8 @@ Incubator.Pitch = Pitch;
 export declare namespace Incubator {
   export {
     Pitch as Pitch,
-    type QuantumWeaverState as QuantumWeaverState,
+    type PitchGetDetailsResponse as PitchGetDetailsResponse,
+    type PitchSubmitResponse as PitchSubmitResponse,
     type PitchSubmitParams as PitchSubmitParams,
   };
 }
