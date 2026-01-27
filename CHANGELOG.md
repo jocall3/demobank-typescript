@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.2.0 (2026-01-27)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/jocall3/demobank-typescript/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** manual updates ([fc7dcf2](https://github.com/jocall3/demobank-typescript/commit/fc7dcf26f35b290699a09f007f8a10d88c62e7c2))
+
+
+### Chores
+
+* break long lines in snippets into multiline ([c1dc3f1](https://github.com/jocall3/demobank-typescript/commit/c1dc3f12c5f173258b94189fae8c023bb9f3e4c6))
+* **ci:** upgrade `actions/github-script` ([55a9220](https://github.com/jocall3/demobank-typescript/commit/55a9220e41a7ada4c8365002a49f1b546e12f6e9))
+* **internal:** codegen related update ([863370e](https://github.com/jocall3/demobank-typescript/commit/863370e92cafc6b8c3e619c82a912c440ddfea59))
+* **internal:** codegen related update ([7b1058d](https://github.com/jocall3/demobank-typescript/commit/7b1058d5c5b4a63d8eac2d190261746c1e6c0585))
+* **internal:** update `actions/checkout` version ([76986a7](https://github.com/jocall3/demobank-typescript/commit/76986a7f551771d0d27dfb6c8ca7026b42fafcfa))
+* **internal:** update lock file ([cda679d](https://github.com/jocall3/demobank-typescript/commit/cda679d59789d24e83ad57e20a5b09e99e3ad41e))
+* **internal:** upgrade babel, qs, js-yaml ([5974321](https://github.com/jocall3/demobank-typescript/commit/597432195656b0bde3e7dffaa26a8a0b55fb19e7))
+* **internal:** upgrade brace-expansion and @babel/helpers ([05696a2](https://github.com/jocall3/demobank-typescript/commit/05696a206df90c456d6adfcc56f433901546f154))
+* update SDK settings ([103603d](https://github.com/jocall3/demobank-typescript/commit/103603d1af6341818628fcc82b9b764c0ebe0540))
+
 ## 0.1.0 (2025-12-19)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/jocall3/demobank-typescript/compare/v0.0.1...v0.1.0)
