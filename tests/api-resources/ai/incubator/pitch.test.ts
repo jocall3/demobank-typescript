@@ -5,7 +5,7 @@ import Demobank from 'demobank';
 const client = new Demobank({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
 describe('resource pitch', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('getDetails', async () => {
     const responsePromise = client.ai.incubator.pitch.getDetails('pitch_qw_synergychain-xyz');
     const rawResponse = await responsePromise.asResponse();
@@ -17,7 +17,7 @@ describe('resource pitch', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('submit: only required params', async () => {
     const responsePromise = client.ai.incubator.pitch.submit({
       financialProjections: {
@@ -37,7 +37,7 @@ describe('resource pitch', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('submit: required and optional params', async () => {
     const response = await client.ai.incubator.pitch.submit({
       financialProjections: {

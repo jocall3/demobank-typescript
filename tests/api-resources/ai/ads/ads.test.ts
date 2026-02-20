@@ -5,7 +5,7 @@ import Demobank from 'demobank';
 const client = new Demobank({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
 describe('resource ads', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('getGenerationStatus', async () => {
     const responsePromise = client.ai.ads.getGenerationStatus('op-video-gen-12345-abcde');
     const rawResponse = await responsePromise.asResponse();
