@@ -5,7 +5,7 @@ import Demobank from 'demobank';
 const client = new Demobank({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
 describe('resource generate', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('create', async () => {
     const responsePromise = client.ai.ads.generate.create({});
     const rawResponse = await responsePromise.asResponse();

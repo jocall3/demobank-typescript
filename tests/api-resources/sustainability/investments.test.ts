@@ -5,7 +5,7 @@ import Demobank from 'demobank';
 const client = new Demobank({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
 describe('resource investments', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('analyzeImpact', async () => {
     const responsePromise = client.sustainability.investments.analyzeImpact();
     const rawResponse = await responsePromise.asResponse();

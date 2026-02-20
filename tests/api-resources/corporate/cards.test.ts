@@ -5,7 +5,7 @@ import Demobank from 'demobank';
 const client = new Demobank({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
 describe('resource cards', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('list', async () => {
     const responsePromise = client.corporate.cards.list();
     const rawResponse = await responsePromise.asResponse();
@@ -17,7 +17,7 @@ describe('resource cards', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -25,7 +25,7 @@ describe('resource cards', () => {
     ).rejects.toThrow(Demobank.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('freeze', async () => {
     const responsePromise = client.corporate.cards.freeze('corp_card_xyz987654', {});
     const rawResponse = await responsePromise.asResponse();
@@ -37,7 +37,7 @@ describe('resource cards', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('issueVirtual: only required params', async () => {
     const responsePromise = client.corporate.cards.issueVirtual({
       controls: {
@@ -61,7 +61,7 @@ describe('resource cards', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('issueVirtual: required and optional params', async () => {
     const response = await client.corporate.cards.issueVirtual({
       controls: {
@@ -78,7 +78,7 @@ describe('resource cards', () => {
     });
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('updateControls', async () => {
     const responsePromise = client.corporate.cards.updateControls('corp_card_xyz987654');
     const rawResponse = await responsePromise.asResponse();
@@ -90,7 +90,7 @@ describe('resource cards', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('updateControls: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
