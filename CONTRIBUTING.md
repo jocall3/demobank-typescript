@@ -60,7 +60,7 @@ $ yarn link demobank
 # With pnpm
 $ pnpm link --global
 $ cd ../my-package
-$ pnpm link -—global demobank
+$ pnpm link --global demobank
 ```
 
 ## Running tests
