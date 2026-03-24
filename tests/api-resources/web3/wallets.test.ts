@@ -5,7 +5,7 @@ import Demobank from 'demobank';
 const client = new Demobank({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
 describe('resource wallets', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('list', async () => {
     const responsePromise = client.web3.wallets.list();
     const rawResponse = await responsePromise.asResponse();
@@ -17,7 +17,7 @@ describe('resource wallets', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -25,7 +25,7 @@ describe('resource wallets', () => {
     ).rejects.toThrow(Demobank.NotFoundError);
   });
 
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('connect', async () => {
     const responsePromise = client.web3.wallets.connect({});
     const rawResponse = await responsePromise.asResponse();

@@ -5,7 +5,7 @@ import Demobank from 'demobank';
 const client = new Demobank({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
 describe('resource compliance', () => {
-  // Prism tests are disabled
+  // Mock server tests are disabled
   test.skip('requestAudit', async () => {
     const responsePromise = client.corporate.compliance.requestAudit({});
     const rawResponse = await responsePromise.asResponse();
